@@ -16,8 +16,11 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 
 public class GamePanel extends JPanel {
+	private Client client;
 
 	private JPanel topPanel;
 	private JLabel header;
@@ -36,11 +39,12 @@ public class GamePanel extends JPanel {
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
 
-	public GamePanel() {
+	public GamePanel(Client client) {
 		super(new BorderLayout());
 
 		this.add(createTopPanel(), BorderLayout.NORTH);
 		this.add(createLeftPanel(), BorderLayout.WEST);
+		this.client = client;
 	}
 
 
@@ -62,47 +66,51 @@ public class GamePanel extends JPanel {
 
 		leftPanel.setPreferredSize(new Dimension(300, 600));
 
-    conversation = new JTextPane();
+		conversation = new JTextPane();
 		scroll = new JScrollPane(conversation);
-    gbc.weightx = 0.2;
-    gbc.weighty = 0.97;
-    gbc.gridwidth = 5;
-    gbc.gridx = 0;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.BOTH;
-    gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-    leftPanel.add(scroll, gbc);
+		gbc.weightx = 0.2;
+		gbc.weighty = 0.97;
+		gbc.gridwidth = 5;
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+		leftPanel.add(scroll, gbc);
 
-    input = new JTextField();
-    gbc.weighty = 0.03;
-    gbc.weightx = 0.99;
-    gbc.anchor = GridBagConstraints.PAGE_END;
-    gbc.insets = new Insets(1,0,0,0);
-    gbc.gridx = 0;
-    gbc.gridwidth = 3;
-    gbc.gridy = 5;
-    leftPanel.add(input, gbc);
+		input = new JTextField();
+		gbc.weighty = 0.03;
+		gbc.weightx = 0.99;
+		gbc.anchor = GridBagConstraints.PAGE_END;
+		gbc.insets = new Insets(1,0,0,0);
+		gbc.gridx = 0;
+		gbc.gridwidth = 3;
+		gbc.gridy = 5;
+		leftPanel.add(input, gbc);
 
-    chatButton = new JButton("Enter");
-    gbc.ipady = 0;
-    gbc.weightx = 0.01;
-    gbc.anchor = GridBagConstraints.PAGE_END;
-    gbc.insets = new Insets(1,0,0,0);
-    gbc.gridx = 4;
-    gbc.gridwidth = 1;
-    gbc.gridy = 5;
-    leftPanel.add(chatButton, gbc);
+		chatButton = new JButton("Enter");
+		gbc.ipady = 0;
+		gbc.weightx = 0.01;
+		gbc.anchor = GridBagConstraints.PAGE_END;
+		gbc.insets = new Insets(1,0,0,0);
+		gbc.gridx = 4;
+		gbc.gridwidth = 1;
+		gbc.gridy = 5;
+		leftPanel.add(chatButton, gbc);
 
-    chatButton.addActionListener(new ActionListener() {
-    	@Override
-    	public void actionPerformed(ActionEvent ae) {
-    		String curr = conversation.getText();
-    		conversation.setText(curr + input.getText() + "\n");
-    		input.setText("");
-    	}
-    });
+		chatButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				appendConversationPane(input.getText());
+				input.setText("");
+			}
+		});
 
 		return leftPanel;
+	}
+
+	public void appendConversationPane (String message) {
+		String curr = conversation.getText();
+		conversation.setText(curr + message + "\n");
 	}
 
 

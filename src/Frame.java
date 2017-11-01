@@ -32,16 +32,22 @@ public class Frame extends JFrame {
 
 		menuPanel = new MenuPanel();
 		instructionPanel = new InstructionPanel();
-		gamePanel = new GamePanel();
 
 		mainPanel.add(menuPanel, MENU);
-		mainPanel.add(gamePanel, GAME);
 		mainPanel.add(instructionPanel, INSTRUCTION);
 
 		menuPanel.getStartButton().addActionListener(new ActionListener () {
 			@Override
-			public void actionPerformed(ActionEvent ae) {
-				cardLayout.show(mainPanel, GAME);
+			public void actionPerformed(ActionEvent ae) { //create and start a new client
+				Client client = new Client(menuPanel.getNameField(), "localhost", 4444);
+				//instantiate new game panel
+				addGamePanel(client);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+		        		client.startClient();
+					}
+				}).start();
 			}
 		});
 
@@ -59,13 +65,6 @@ public class Frame extends JFrame {
 			}
 		});
 
-		gamePanel.getBackButton().addActionListener(new ActionListener () {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				cardLayout.show(mainPanel, MENU);
-			}
-		});
-
 		instructionPanel.getBackButton().addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
@@ -74,6 +73,19 @@ public class Frame extends JFrame {
 		});
 
 		return mainPanel;
+	}
+
+	private void addGamePanel(Client client) {
+		gamePanel = new GamePanel(client);
+		mainPanel.add(gamePanel, GAME);
+
+		gamePanel.getBackButton().addActionListener(new ActionListener () {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				cardLayout.show(mainPanel, MENU);
+			}
+		});		
+		cardLayout.show(mainPanel, GAME);
 	}
 
 }

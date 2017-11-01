@@ -95,56 +95,56 @@ public class MenuPanel extends JPanel {
 
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridwidth = 5;
-    buttonContainer.add(title, gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridwidth = 5;
+		buttonContainer.add(title, gbc);
 
-    gbc.insets = new Insets(-20, 350, 0, 0);
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridx = 2;
-    gbc.gridy = 1;
-    gbc.gridwidth = 1;
-    gbc.fill = GridBagConstraints.PAGE_END;
-    buttonContainer.add(version, gbc);
+		gbc.insets = new Insets(-20, 350, 0, 0);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridx = 2;
+		gbc.gridy = 1;
+		gbc.gridwidth = 1;
+		gbc.fill = GridBagConstraints.PAGE_END;
+		buttonContainer.add(version, gbc);
 
-    gbc.insets = new Insets(10, 0, -10, 0);
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridx = 2;
-    gbc.gridy = 2;
-    gbc.gridwidth = 2;
-    gbc.fill = GridBagConstraints.PAGE_END;
-    buttonContainer.add(nameLabel, gbc);
+		gbc.insets = new Insets(10, 0, -10, 0);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridx = 2;
+		gbc.gridy = 2;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.PAGE_END;
+		buttonContainer.add(nameLabel, gbc);
 
-    gbc.insets = new Insets(0, 110, 0, 110);
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.ipady = 10;
-    gbc.gridx = 0;
-    gbc.gridy = 3;
-    gbc.gridwidth = 3;
-    gbc.insets = new Insets(10, 0, 10, 0);
-    buttonContainer.add(nameField, gbc);
+		gbc.insets = new Insets(0, 110, 0, 110);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.ipady = 10;
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.gridwidth = 3;
+		gbc.insets = new Insets(10, 0, 10, 0);
+		buttonContainer.add(nameField, gbc);
 
 
-    gbc.insets = new Insets(5, 0, 5, 0);
-    gbc.gridx = 0;
-    gbc.gridy = 4;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridwidth = 3;
-    buttonContainer.add(startButton, gbc);
+		gbc.insets = new Insets(5, 0, 5, 0);
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridwidth = 3;
+		buttonContainer.add(startButton, gbc);
 
-    gbc.gridx = 0;
-    gbc.gridy = 5;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridwidth = 3;
-    buttonContainer.add(instructionButton, gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridwidth = 3;
+		buttonContainer.add(instructionButton, gbc);
 
-    gbc.gridx = 0;
-    gbc.gridy = 6;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.gridwidth = 3;
-    buttonContainer.add(exitButton, gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridwidth = 3;
+		buttonContainer.add(exitButton, gbc);
 
 		this.add(buttonContainer, BorderLayout.CENTER);
 
@@ -162,4 +162,7 @@ public class MenuPanel extends JPanel {
 		return this.exitButton;
 	}
 
+	public String getNameField() {
+		return this.nameField.getText();
+	}
 }
