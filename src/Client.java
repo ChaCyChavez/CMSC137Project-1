@@ -43,7 +43,7 @@ public class Client {
                 if(serverInputStream.ready()){ //wait for data to become available
                     String input;                
                     if((input = serverInputStream.readLine()) != null){ //read from inputstream
-                        gamePanel.appendConversationPane(input); //must print to JTextPane
+                        gamePanel.appendConversationPane(input + "\n"); //must print to JTextPane
                     }
                 }
                 if(sendMessage){

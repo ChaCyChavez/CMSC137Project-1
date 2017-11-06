@@ -158,7 +158,7 @@ public class GamePanel extends JPanel {
 
 	public void appendConversationPane (String message) {
 		String curr = conversation.getText();
-		conversation.setText(curr + message + "\n");
+		conversation.setText(curr + message);
 	}
 
 
