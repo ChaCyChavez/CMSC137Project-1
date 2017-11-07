@@ -153,6 +153,14 @@ public class GamePanel extends JPanel {
 			}
 		});
 
+		input.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ke) {
+				appendConversationPane(input.getText());
+				input.setText("");
+			}
+		});
+
 		return leftPanel;
 	}
 

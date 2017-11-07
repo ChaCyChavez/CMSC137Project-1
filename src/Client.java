@@ -29,6 +29,15 @@ public class Client {
                 gamePanel.input.setText("");
             }
         });
+
+        gamePanel.input.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                message = gamePanel.input.getText();
+                sendMessage = true;
+                gamePanel.input.setText("");
+            }
+        });
     }
 
     public void startClient(){
