@@ -42,12 +42,7 @@ public class Frame extends JFrame {
 				Client client = new Client(menuPanel.getNameField(), "localhost", 4444);
 				//instantiate new game panel
 				addGamePanel(client);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-		        		client.startClient();
-					}
-				}).start();
+				
 			}
 		});
 

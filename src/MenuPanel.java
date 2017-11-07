@@ -17,6 +17,9 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+
 import java.io.IOException;
 import java.io.File;
 
@@ -41,7 +44,7 @@ public class MenuPanel extends JPanel {
 		  
 		  ge.registerFont(font);
 		} catch (IOException|FontFormatException e) {
-		  // System.out.println(e);
+		  e.printStackTrace();
 		}
 
 		buttonContainer = new JPanel(new GridBagLayout());
@@ -73,77 +76,57 @@ public class MenuPanel extends JPanel {
 		nameField.setForeground(Color.WHITE);
 		nameField.setHorizontalAlignment(JTextField.CENTER);
 
-		font = font.deriveFont(Font.PLAIN, 40);
+		
 		startButton = new JButton("Join Game");
-		startButton.setFont(font);
-		startButton.setBackground(Color.BLACK);
-		startButton.setForeground(Color.WHITE);
-		startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		setMenuButtonFont(startButton);
+		addHoverEffect(startButton);
 
 		exitButton = new JButton("Exit");
-		exitButton.setFont(font);
-		exitButton.setBackground(Color.BLACK);
-		exitButton.setForeground(Color.WHITE);
-		exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		setMenuButtonFont(exitButton);
+		addHoverEffect(exitButton);
 
 		instructionButton = new JButton("Instruction");
-		instructionButton.setFont(font);
-		instructionButton.setBackground(Color.BLACK);
-		instructionButton.setForeground(Color.WHITE);
-		instructionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		setMenuButtonFont(instructionButton);
+		addHoverEffect(instructionButton);
 
 
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridwidth = 5;
 		buttonContainer.add(title, gbc);
 
 		gbc.insets = new Insets(-20, 350, 0, 0);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.fill = GridBagConstraints.PAGE_END;
 		gbc.gridx = 2;
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
-		gbc.fill = GridBagConstraints.PAGE_END;
 		buttonContainer.add(version, gbc);
 
 		gbc.insets = new Insets(10, 0, -10, 0);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridx = 2;
 		gbc.gridy = 2;
 		gbc.gridwidth = 2;
-		gbc.fill = GridBagConstraints.PAGE_END;
 		buttonContainer.add(nameLabel, gbc);
 
-		gbc.insets = new Insets(0, 110, 0, 110);
+		gbc.insets = new Insets(10, 0, 10, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.ipady = 10;
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.gridwidth = 3;
-		gbc.insets = new Insets(10, 0, 10, 0);
 		buttonContainer.add(nameField, gbc);
 
 
 		gbc.insets = new Insets(5, 0, 5, 0);
-		gbc.gridx = 0;
 		gbc.gridy = 4;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridwidth = 3;
 		buttonContainer.add(startButton, gbc);
 
-		gbc.gridx = 0;
 		gbc.gridy = 5;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridwidth = 3;
 		buttonContainer.add(instructionButton, gbc);
 
-		gbc.gridx = 0;
 		gbc.gridy = 6;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridwidth = 3;
 		buttonContainer.add(exitButton, gbc);
 
 		this.add(buttonContainer, BorderLayout.CENTER);
@@ -164,5 +147,33 @@ public class MenuPanel extends JPanel {
 
 	public String getNameField() {
 		return this.nameField.getText();
+	}
+
+	private void setMenuButtonFont(JButton button)  {
+		font = font.deriveFont(Font.PLAIN, 40);
+		button.setFont(font);
+		button.setBackground(Color.BLACK);
+		button.setForeground(Color.WHITE);
+		button.setAlignmentX(Component.CENTER_ALIGNMENT);
+	}
+
+	private void addHoverEffect(JButton button) {
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent me) {
+				button.setBackground(Color.WHITE);
+				button.setForeground(Color.BLACK);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent me) {
+				button.setBackground(Color.BLACK);
+				button.setForeground(Color.WHITE);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent me) {}
+
+		});
 	}
 }

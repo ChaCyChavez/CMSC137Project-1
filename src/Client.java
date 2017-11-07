@@ -7,6 +7,7 @@ public class Client {
     private String serverHost;
     private int serverPort;
     public Socket socket;
+    private ServerThread serverThread;
 
     // public static void main(String[] args){
     //     System.out.println("Enter your name:");
@@ -35,7 +36,7 @@ public class Client {
             Scanner sc = new Scanner(System.in);
             Thread.sleep(1000); // waiting for network communicating.
 
-            ServerThread serverThread = new ServerThread(socket, name);
+            serverThread = new ServerThread(socket, name);
             Thread serverAccessThread = new Thread(serverThread);
             serverAccessThread.start();
             while(serverAccessThread.isAlive()){
