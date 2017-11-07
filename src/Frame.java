@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -31,18 +32,26 @@ public class Frame extends JFrame {
 		mainPanel = new JPanel(cardLayout);
 
 		menuPanel = new MenuPanel();
+		gamePanel = new GamePanel();
 		instructionPanel = new InstructionPanel();
 
 		mainPanel.add(menuPanel, MENU);
+		mainPanel.add(gamePanel, GAME);
 		mainPanel.add(instructionPanel, INSTRUCTION);
 
 		menuPanel.getStartButton().addActionListener(new ActionListener () {
 			@Override
-			public void actionPerformed(ActionEvent ae) { //create and start a new client
-				Client client = new Client(menuPanel.getNameField(), "localhost", 4444);
-				//instantiate new game panel
-				addGamePanel(client);
-				
+			public void actionPerformed(ActionEvent ae) { 
+				if(!menuPanel.getNameField().equals("")) { //create client only if name is not empty
+					cardLayout.show(mainPanel, GAME);
+					Client client = new Client(menuPanel.getNameField(), "localhost", 4444, gamePanel); //create and start a new client
+					new Thread(new Runnable() { //run new thread so gui wont freeze
+						@Override
+						public void run() {
+							client.startClient();
+						}
+					}).start();
+				}
 			}
 		});
 
@@ -60,6 +69,13 @@ public class Frame extends JFrame {
 			}
 		});
 
+		gamePanel.getBackButton().addActionListener(new ActionListener () {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				cardLayout.show(mainPanel, MENU);
+			}
+		});		
+
 		instructionPanel.getBackButton().addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
@@ -69,18 +85,4 @@ public class Frame extends JFrame {
 
 		return mainPanel;
 	}
-
-	private void addGamePanel(Client client) {
-		gamePanel = new GamePanel(client);
-		mainPanel.add(gamePanel, GAME);
-
-		gamePanel.getBackButton().addActionListener(new ActionListener () {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				cardLayout.show(mainPanel, MENU);
-			}
-		});		
-		cardLayout.show(mainPanel, GAME);
-	}
-
 }

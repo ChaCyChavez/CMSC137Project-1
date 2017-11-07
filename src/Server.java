@@ -1,26 +1,19 @@
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class Server {
-
     private static final int portNumber = 4444;
 
     private int port;
-    private List<ClientThread> clients; // or "protected static List<ClientThread> clients;"
-
-    // public static void main(String[] args){
-    //     Server server = new Server(portNumber);
-    //     server.startServer();
-    // }
+    private ArrayList<ClientThread> clients;
 
     public Server(int portNumber){
         this.port = portNumber;
     }
 
-    public List<ClientThread> getClients(){
+    public ArrayList<ClientThread> getClients(){
         return clients;
     }
 

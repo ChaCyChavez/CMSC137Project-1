@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.File;
 
 public class GamePanel extends JPanel {
-	private Client client;
 
 	private JPanel topPanel;
 	private JLabel header;
@@ -41,8 +40,8 @@ public class GamePanel extends JPanel {
 	private GridBagConstraints gbc;
 	private JTextPane conversation;
 	private JScrollPane scroll;
-	private JTextField input;
-	private JButton chatButton;
+	public JTextField input;
+	public JButton chatButton;
 
 	private JPanel centerPanel;
 	private Font font;
@@ -50,7 +49,7 @@ public class GamePanel extends JPanel {
   final static boolean shouldWeightX = true;
   final static boolean RIGHT_TO_LEFT = false;
 
-	public GamePanel(Client client) {
+	public GamePanel() {
 		super(new BorderLayout());
 		this.setBackground(Color.BLACK);
 
@@ -65,13 +64,6 @@ public class GamePanel extends JPanel {
 
 		this.add(createTopPanel(), BorderLayout.NORTH);
 		this.add(createLeftPanel(), BorderLayout.WEST);
-		this.client = client;
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-        		client.startClient();
-			}
-		}).start();
 	}
 
 

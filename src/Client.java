@@ -1,47 +1,56 @@
-import java.io.IOException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
     private String name;
     private String serverHost;
     private int serverPort;
-    public Socket socket;
-    private ServerThread serverThread;
+    public String message;
+    public Boolean sendMessage = false;
+    public GamePanel gamePanel;
 
-    // public static void main(String[] args){
-    //     System.out.println("Enter your name:");
-    //     Scanner sc = new Scanner(System.in);
-    //     String readName = null;
-    //     while(readName == null || readName.trim().equals("")){ // null, empty, whitespace(s) not allowed.
-    //         readName = sc.nextLine();
-    //         if(readName.trim().equals("")){
-    //             System.out.println("Invalid name. Enter a new one:");
-    //         }
-    //     }
-
-    //     Client client = new Client(readName, host, port);
-    //     client.startClient(sc);
-    // }
-
-    public Client(String name, String host, int port){
+    public Client(String name, String host, int port, GamePanel gamePanel){
         this.name = name;
         this.serverHost = host;
         this.serverPort = port;
+        this.gamePanel = gamePanel;
+
+        gamePanel.chatButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                message = gamePanel.input.getText();
+                sendMessage = true;
+                gamePanel.input.setText("");
+            }
+        });
     }
 
     public void startClient(){
         try{
-            socket = new Socket(serverHost, serverPort);
-            Scanner sc = new Scanner(System.in);
-            Thread.sleep(1000); // waiting for network communicating.
+            Socket socket = new Socket(serverHost, serverPort);
+            Thread.sleep(1000); // waiting for network communicating
 
-            serverThread = new ServerThread(socket, name);
-            Thread serverAccessThread = new Thread(serverThread);
-            serverAccessThread.start();
-            while(serverAccessThread.isAlive()){
-                if(sc.hasNextLine()){
-                    serverThread.addMessage(sc.nextLine());
+            PrintWriter serverOutput = new PrintWriter(socket.getOutputStream(), false); //output stream to send data
+            BufferedReader serverInputStream = new BufferedReader(new InputStreamReader(socket.getInputStream())); //input stream to read data
+
+            while(!socket.isClosed()){
+                if(serverInputStream.ready()){ //wait for data to become available
+                    String input;                
+                    if((input = serverInputStream.readLine()) != null){ //read from inputstream
+                        gamePanel.appendConversationPane(input); //must print to JTextPane
+                    }
+                }
+                if(sendMessage){
+                    serverOutput.println(name + ": " + message); //write to output stream
+                    serverOutput.flush();
+                    message = null; 
+                    sendMessage = false;
                 }
             }
         }catch(Exception e){
