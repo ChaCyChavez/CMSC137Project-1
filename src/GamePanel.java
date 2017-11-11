@@ -36,6 +36,8 @@ public class GamePanel extends JPanel {
 	private JLabel header;
 	private JButton backButton;
 
+	private PlayingField playingField;
+
 	private JPanel leftPanel;
 	private GridBagConstraints gbc;
 	private JTextPane conversation;
@@ -64,6 +66,13 @@ public class GamePanel extends JPanel {
 
 		this.add(createTopPanel(), BorderLayout.NORTH);
 		this.add(createLeftPanel(), BorderLayout.WEST);
+		this.add(createCenterPanel(), BorderLayout.CENTER);
+	}
+
+	public JPanel createCenterPanel() {
+		playingField = new PlayingField();
+
+		return playingField;
 	}
 
 
