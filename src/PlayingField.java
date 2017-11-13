@@ -1,6 +1,7 @@
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
 
 import javax.swing.JPanel;
 import javax.swing.JComponent;
@@ -11,11 +12,19 @@ import javax.swing.AbstractAction;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import java.awt.image.BufferedImage;
+
 
 public class PlayingField extends JPanel implements Runnable {
 	private String text;
 	private int dx;
 	private int dy;
+
+	private boolean isUp, isDown, isLeft, isRight;
+	private boolean running = false;
+
+	private Thread thread;
+	private BufferedImage offscreen;
 
 	public PlayingField() {
 		super();
@@ -29,32 +38,40 @@ public class PlayingField extends JPanel implements Runnable {
 		Action up = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				dy -= 5;
-				repaint();
+				isUp = true;
+				isDown = false;
+				isRight = false;
+				isLeft = false;
 			}
 		};
 
 		Action down = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				dy += 5;
-				repaint();
+				isUp = false;
+				isDown = true;
+				isRight = false;
+				isLeft = false;
 			}
 		};
 
 		Action right = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				dx += 5;
-				repaint();
+				isUp = false;
+				isDown = false;
+				isRight = true;
+				isLeft = false;
 			}
 		};
 
 		Action left = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				dx -= 5;
-				repaint();
+				isUp = false;
+				isDown = false;
+				isRight = false;
+				isLeft = true;
 			}
 		};
 
@@ -72,18 +89,90 @@ public class PlayingField extends JPanel implements Runnable {
     this.getActionMap().put("rightPressed", right);
 	}
 
-	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
 		Graphics2D g2D = (Graphics2D)g;
 
-		g2D.fillOval(dx, dy, 50, 50);
+		g2D.fillOval(dx, dy, 25, 25);
+
+	}
+
+	public synchronized void start() {
+		if(running) {
+			return;
+		}
+
+		running = true;
+
+		thread = new Thread(this);
+		thread.start();
+	}
+
+	private synchronized void stop() {
+		if(!running) {
+			return;
+		}
+
+		running = false;
+		try {
+			thread.join();
+		}
+		catch(InterruptedException ie) {
+			ie.printStackTrace();
+		}
+
+		System.exit(1);
 	}
 
 	@Override
 	public void run() {
-		
+		long lastTime = System.nanoTime();
+		final double amountOfTicks = 60.0;
+		double ns = 1000000000 / amountOfTicks;
+		double delta = 0;
+		int updates = 0;
+		int frames = 0;
+		long timer = System.currentTimeMillis();
+
+
+		while(true) {
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			if(delta >= 1) {
+				delta--;
+				updates++;
+			}	
+			frames++;
+
+			if(System.currentTimeMillis() - timer > 1000) {
+				timer += 1000;
+				System.out.println(updates + " Ticks, fps " + frames);
+				updates = 0;
+				frames = 0;
+			}
+
+			if(isUp) {
+				dy -= 1;
+			}
+			else if(isDown) {
+				dy += 1;
+			}
+			else if(isLeft) {
+				dx -= 1;
+			}
+			else if(isRight) {
+				dx += 1;
+			}
+
+			repaint();
+
+			try {
+				Thread.sleep(10);
+			} catch(InterruptedException ie) {
+				ie.printStackTrace();
+			}
+		}
 	}
-	 
 }
