@@ -37,7 +37,8 @@ public class PlayingField extends JPanel implements Runnable {
 
 	public PlayingField(String server, String playerName) {
 		super();
-		System.out.println("centerpanel player name" + playerName);
+		System.out.println("playingfield player name: " + playerName);
+		System.out.println("playingfield server name: " + server);
 
 		this.server = server;
 		this.playerName = playerName;
@@ -162,7 +163,7 @@ public class PlayingField extends JPanel implements Runnable {
 
 		while(true) {
 			//to check FPS
-			System.out.println("playing field");
+
 			// long now = System.nanoTime();
 			// delta += (now - lastTime) / ns;
 			// lastTime = now;
@@ -179,41 +180,45 @@ public class PlayingField extends JPanel implements Runnable {
 			// 	frames = 0;
 			// }
 			/**/ 
+			// try{
+			// 	Thread.sleep(1);
+			// }catch(Exception ioe){}
 
-			byte[] buffer = new byte[256];
-			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-			try {
-				socket.receive(packet);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			// byte[] buffer = new byte[256];
+			// DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+			// try {
+			// 	socket.receive(packet);
+			// } catch (Exception e) {
+			// 	e.printStackTrace();
+			// }
 
-			dataFromServer = new String(buffer);
-			dataFromServer = dataFromServer.trim();
+			// dataFromServer = new String(buffer);
+			// dataFromServer = dataFromServer.trim();
+			// System.out.println("data from server" + dataFromServer);
 
-			if(!isConnected && dataFromServer.startsWith("CONNECTED")) {
+			if(!isConnected) {
 				isConnected = true;
 				System.out.println("Connected.");
 			} else if (!isConnected){
 				System.out.println("Connecting..");				
 				sendMessage("CONNECT "+ playerName);
 			} else if(isConnected) {
-				if(dataFromServer.startsWith("PLAYER")) {
-					if(isUp) {
-						dy -= 1;
-					}
-					else if(isDown) {
-						dy += 1;
-					}
-					else if(isLeft) {
-						dx -= 1;
-					}
-					else if(isRight) {
-						dx += 1;
-					}
-					sendMessage("PLAYER "+ playerName + " "+ dx + " "+ dy);					
-					repaint();
+				// if(dataFromServer.startsWith("PLAYER")) {
+				if(isUp) {
+					dy -= 1;
 				}
+				else if(isDown) {
+					dy += 1;
+				}
+				else if(isLeft) {
+					dx -= 1;
+				}
+				else if(isRight) {
+					dx += 1;
+				}
+				sendMessage("PLAYER "+ playerName + " "+ dx + " "+ dy);					
+				repaint();
+				// }
 			}
 
 			try {
