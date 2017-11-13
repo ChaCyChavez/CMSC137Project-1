@@ -184,22 +184,12 @@ public class PlayingField extends JPanel implements Runnable {
 			// 	Thread.sleep(1);
 			// }catch(Exception ioe){}
 
-			// byte[] buffer = new byte[256];
-			// DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-			// try {
-			// 	socket.receive(packet);
-			// } catch (Exception e) {
-			// 	e.printStackTrace();
-			// }
-
-			// dataFromServer = new String(buffer);
-			// dataFromServer = dataFromServer.trim();
-			// System.out.println("data from server" + dataFromServer);
-
-			if(!isConnected) {
+			// if(!isConnected) {
+			// 	isConnected = true;
+			// 	System.out.println("Connected.");
+			// } else 
+			if (!isConnected){
 				isConnected = true;
-				System.out.println("Connected.");
-			} else if (!isConnected){
 				System.out.println("Connecting..");				
 				sendMessage("CONNECT "+ playerName);
 			} else if(isConnected) {
@@ -216,7 +206,31 @@ public class PlayingField extends JPanel implements Runnable {
 				else if(isRight) {
 					dx += 1;
 				}
-				sendMessage("PLAYER "+ playerName + " "+ dx + " "+ dy);					
+				sendMessage("PLAYER "+ playerName + " "+ dx + " "+ dy);		
+				
+				byte[] buffer = new byte[256];
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+				try {
+					socket.receive(packet);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				dataFromServer = new String(buffer);
+				dataFromServer = dataFromServer.trim();
+				System.out.println("data from server" + dataFromServer);
+
+				// String[] playersInfo = dataFromServer.split(":");
+				// 	for (int i=0;i<playersInfo.length;i++){
+				// 		String[] playerInfo = playersInfo[i].split(" ");
+				// 		String pname =playerInfo[1];
+						// int x = Integer.parseInt(playerInfo[2]);
+						// int y = Integer.parseInt(playerInfo[3]);
+						// System.out.println("x y " + x + " " + y);
+				// 	}
+				// System.out.println();
+				// !!!catch outofbounds exception!!!
+
 				repaint();
 				// }
 			}
