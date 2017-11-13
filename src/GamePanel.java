@@ -72,6 +72,7 @@ public class GamePanel extends JPanel {
 	public JPanel createCenterPanel() {
 		playingField = new PlayingField();
 
+		playingField.start();
 		return playingField;
 	}
 
