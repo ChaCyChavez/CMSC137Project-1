@@ -73,7 +73,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public JPanel createCenterPanel() {
-		playingField = new PlayingField("knockout-server", playerName);
+		playingField = new PlayingField("localhost", playerName);
 		return playingField;
 	}
 
