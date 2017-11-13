@@ -1,3 +1,6 @@
+import java.util.Iterator;
+import java.util.HashMap;
+
 public class GameState {
     private HashMap gamePlayers = new HashMap();
 

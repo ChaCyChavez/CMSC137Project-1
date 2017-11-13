@@ -1,6 +1,6 @@
 import java.net.InetAddress;
 
-public class GamePlayer() {
+public class GamePlayer {
     private InetAddress inetAddress;
     private int portNumber;
     private String playerName;
@@ -24,7 +24,7 @@ public class GamePlayer() {
 		return playerName;
 	}
 
-    public void setX(int x){ /*** Sets the X coordinate of the player */
+  public void setX(int x){ /*** Sets the X coordinate of the player */
 		this.xPosition = x;
 	}
 	
@@ -41,6 +41,6 @@ public class GamePlayer() {
 	}
 
 	public String playerToString(){ /*** String representation. used for transfer over the network */
-		return "PLAYER " + name + " " + xPosition + " " + yPosition;
+		return ("PLAYER " + playerName + " " + xPosition + " " + yPosition);
 	}	
 }

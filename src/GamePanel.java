@@ -51,9 +51,12 @@ public class GamePanel extends JPanel {
   final static boolean shouldWeightX = true;
   final static boolean RIGHT_TO_LEFT = false;
 
-	public GamePanel() {
+	public String playerName;
+
+	public GamePanel(String playerName) {
 		super(new BorderLayout());
 		this.setBackground(Color.BLACK);
+		this.playerName = playerName;
 
 		try {
 		  GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -70,12 +73,9 @@ public class GamePanel extends JPanel {
 	}
 
 	public JPanel createCenterPanel() {
-		playingField = new PlayingField();
-
-		playingField.start();
+		playingField = new PlayingField("knockout-server", playerName);
 		return playingField;
 	}
-
 
 	public JPanel createTopPanel() {
 		topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

@@ -1,7 +1,10 @@
 import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+
+import java.util.Iterator;
 
 public class UDPServer implements Runnable {
-    String playerDate;
+    String playerData;
     int connectedPlayers = 0;
     DatagramSocket serverDatagramSocket = null;
     GameState gameState;
@@ -13,7 +16,7 @@ public class UDPServer implements Runnable {
         this.playerLimit = playerLimit;
         try {
             serverDatagramSocket = new DatagramSocket(4444);
-            serverDatagramSocket.setSoTimeout(100);
+            serverDatagramSocket.setSoTimeout(7000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -22,10 +25,10 @@ public class UDPServer implements Runnable {
     }
 
     public void broadcast(String message) { //broadcast data to all players
-        //iterate through players from getPlayers method of GameState
-        for(Iterator i = game.getPlayers().keySet().iterator(); i.hasNext();){
+        //iterate through players from getGamePlayers method of GameState
+        for(Iterator i = gameState.getGamePlayers().keySet().iterator(); i.hasNext();){
 			String playerName = (String) i.next();
-			GamePlayer player = (GamePlayer) game.getPlayers().get(playerName);			
+			GamePlayer player = (GamePlayer) gameState.getGamePlayers().get(playerName);			
 			sendMessage(player, message);	
 		}
     }
@@ -43,7 +46,7 @@ public class UDPServer implements Runnable {
     public void run() {
         while(true) {
             byte[] buffer = new byte[256];
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length()); // packet for receiving packets with length of buffer
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length); // packet for receiving packets with lengthf buffer
             try {
                 serverDatagramSocket.receive(packet);
             } catch (Exception e) {
@@ -53,13 +56,14 @@ public class UDPServer implements Runnable {
             playerData = new String(buffer);
             playerData = playerData.trim();
             System.out.println("playerData = " + playerData);
+            System.out.println("stage = " + stage);
 
             switch(stage) {
                 case 3: //if waiting for players
                     if(playerData.startsWith("CONNECT")) {
                         String playerDataTokens[] = playerData.split(" "); //split playerData by space
                         System.out.println("playerDataToken[1] = " + playerDataTokens[1]);                        
-                        GamePlayer player = new GamePlayer(playerDataTokens[1], packet.getInetAddress(), packet.getPortNumber()); //instantiate new player
+                        GamePlayer player = new GamePlayer(playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
                         gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                         System.out.println("Player connected: " + playerDataTokens[1]);                        
                         broadcast("CONNECTED " + playerDataTokens[1]);
@@ -80,7 +84,7 @@ public class UDPServer implements Runnable {
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
                         int xPosition = Integer.parseInt(playerPosition[2].trim());
                         int yPosition = Integer.parseInt(playerPosition[3].trim());
-                        GamePlayer player = (GamePlayer) gameState.getPlayers().get(playerName);	//Get the player from the game state				  
+                        GamePlayer player = (GamePlayer) gameState.getGamePlayers().get(playerName);	//Get the player from the game state				  
                         player.setX(xPosition);
                         player.setY(yPosition);
                         gameState.update(playerName, player); //Update current player in hashmap of players

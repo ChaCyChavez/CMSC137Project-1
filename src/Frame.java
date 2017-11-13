@@ -32,19 +32,25 @@ public class Frame extends JFrame {
 		mainPanel = new JPanel(cardLayout);
 
 		menuPanel = new MenuPanel();
-		gamePanel = new GamePanel();
 		instructionPanel = new InstructionPanel();
 
 		mainPanel.add(menuPanel, MENU);
-		mainPanel.add(gamePanel, GAME);
 		mainPanel.add(instructionPanel, INSTRUCTION);
 
 		menuPanel.getStartButton().addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent ae) { 
 				if(!menuPanel.getNameField().equals("")) { //create client only if name is not empty
-					cardLayout.show(mainPanel, GAME);
+					gamePanel = new GamePanel(menuPanel.getNameField());
 					Client client = new Client(menuPanel.getNameField(), "localhost", 4444, gamePanel); //create and start a new client
+					mainPanel.add(gamePanel, GAME);
+					gamePanel.getBackButton().addActionListener(new ActionListener () {
+						@Override
+						public void actionPerformed(ActionEvent ae) {
+							cardLayout.show(mainPanel, MENU);
+						}
+					});	
+					cardLayout.show(mainPanel, GAME);
 					new Thread(new Runnable() { //run new thread so gui wont freeze
 						@Override
 						public void run() {
@@ -67,14 +73,7 @@ public class Frame extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				System.exit(0);
 			}
-		});
-
-		gamePanel.getBackButton().addActionListener(new ActionListener () {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				cardLayout.show(mainPanel, MENU);
-			}
-		});		
+		});	
 
 		instructionPanel.getBackButton().addActionListener(new ActionListener () {
 			@Override
