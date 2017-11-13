@@ -9,10 +9,13 @@ import javax.swing.KeyStroke;
 import javax.swing.AbstractAction;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 
-public class PlayingField extends JPanel {
+public class PlayingField extends JPanel implements Runnable {
 	private String text;
+	private int dx;
+	private int dy;
 
 	public PlayingField() {
 		super();
@@ -20,31 +23,38 @@ public class PlayingField extends JPanel {
     this.setFocusable(true);
 		this.requestFocusInWindow();
 
+		dx = 50;
+		dy = 50;
+
 		Action up = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("UP");
+				dy -= 5;
+				repaint();
 			}
 		};
 
 		Action down = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("DOWN");
+				dy += 5;
+				repaint();
 			}
 		};
 
 		Action right = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("RIGHT");
+				dx += 5;
+				repaint();
 			}
 		};
 
 		Action left = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("LEFT");
+				dx -= 5;
+				repaint();
 			}
 		};
 
@@ -62,5 +72,18 @@ public class PlayingField extends JPanel {
     this.getActionMap().put("rightPressed", right);
 	}
 
-	
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		Graphics2D g2D = (Graphics2D)g;
+
+		g2D.fillOval(dx, dy, 50, 50);
+	}
+
+	@Override
+	public void run() {
+		
+	}
+	 
 }
