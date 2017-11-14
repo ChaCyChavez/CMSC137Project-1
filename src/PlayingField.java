@@ -21,6 +21,7 @@ import java.net.InetAddress;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Vector;
 
 public class PlayingField extends JPanel implements Runnable {
 	private String text;
@@ -118,8 +119,9 @@ public class PlayingField extends JPanel implements Runnable {
 		// g2D.fillOval(dx, dy, 25, 25);
 		int limit = playerCoordinates.size();
 		for(int i = 0; i < limit; i++) {
-			Point player = (Point) playerCoordinates.remove(0);
-			g2D.fillOval(player.x, player.y, 25, 25);
+			Vector player = (Vector) playerCoordinates.remove(0);
+			g2D.setColor((Color) player.get(2));	
+			g2D.fillOval((Integer) player.get(0), (Integer) player.get(1), 25, 25);
 		}
 		g2D.dispose();
 		// for(Iterator i = playerCoordinates.keySet().iterator(); i.hasNext();){
@@ -217,9 +219,14 @@ public class PlayingField extends JPanel implements Runnable {
 						String[] playerInfo = playersInfo[i].split(" ");
 						try {
 							String pname = playerInfo[1];
+							Vector player = new Vector();
 							int x = Integer.parseInt(playerInfo[2]);
 							int y = Integer.parseInt(playerInfo[3]);
-							playerCoordinates.add(new Point(x, y));
+							Color playerColor = new Color(Integer.parseInt(playerInfo[4]));
+							player.add(x);
+							player.add(y);
+							player.add(playerColor);
+							playerCoordinates.add(player);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

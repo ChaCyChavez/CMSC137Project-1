@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import java.net.InetAddress;
 
 public class GamePlayer {
@@ -5,11 +7,13 @@ public class GamePlayer {
     private int portNumber;
     private String playerName;
     private int xPosition, yPosition;
+		private Color playerColor;
 
     public GamePlayer(String playerName, InetAddress inetAddress, int portNumber) {
         this.playerName = playerName;
         this.inetAddress = inetAddress;
         this.portNumber = portNumber;
+				this.playerColor = new Color((int)(Math.random() * 0x1000000));
     }
 
     public InetAddress getInetAddress(){
@@ -41,6 +45,6 @@ public class GamePlayer {
 	}
 
 	public String playerToString(){ /*** String representation. used for transfer over the network */
-		return ("PLAYER " + playerName + " " + xPosition + " " + yPosition);
+		return ("PLAYER " + playerName + " " + xPosition + " " + yPosition + " " + Integer.toString(playerColor.getRGB()));
 	}	
 }
