@@ -14,7 +14,7 @@ public class UDPServer implements Runnable {
 
     public UDPServer (int playerLimit) {
         this.playerLimit = playerLimit;
-        System.out.println("playerLimit: " + playerLimit);
+
         try {
             serverDatagramSocket = new DatagramSocket(4444);
             serverDatagramSocket.setSoTimeout(7000);

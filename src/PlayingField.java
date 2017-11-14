@@ -119,10 +119,9 @@ public class PlayingField extends JPanel implements Runnable {
 		int limit = playerCoordinates.size();
 		for(int i = 0; i < limit; i++) {
 			Point player = (Point) playerCoordinates.remove(0);
-			g2D.setColor(new Color((int)(Math.random() * 0x1000000)));			
 			g2D.fillOval(player.x, player.y, 25, 25);
 		}
-
+		g2D.dispose();
 		// for(Iterator i = playerCoordinates.keySet().iterator(); i.hasNext();){
 		// 	String playerName = (String) i.next();
 		// 	Point point = (Point) playerCoordinates.remove(playerName);
@@ -193,7 +192,6 @@ public class PlayingField extends JPanel implements Runnable {
 			// } else 
 			if (!isConnected){
 				isConnected = true;
-				System.out.println("Connecting..");				
 				sendMessage("CONNECT "+ playerName);
 			} else if(isConnected) {
 				if(isUp) dy -= 1;
@@ -213,7 +211,6 @@ public class PlayingField extends JPanel implements Runnable {
 
 				dataFromServer = new String(buffer);
 				dataFromServer = dataFromServer.trim();
-				System.out.println("data from server" + dataFromServer);
 
 				String[] playersInfo = dataFromServer.split(":");
 					for (int i=0;i<playersInfo.length;i++){
