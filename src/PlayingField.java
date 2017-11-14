@@ -12,10 +12,15 @@ import javax.swing.AbstractAction;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.Point;
+import java.awt.Color;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PlayingField extends JPanel implements Runnable {
 	private String text;
@@ -34,6 +39,8 @@ public class PlayingField extends JPanel implements Runnable {
 	private DatagramSocket socket;
 	private boolean isConnected = false;
 	private Thread t = new Thread(this);
+
+	private ArrayList playerCoordinates = new ArrayList();
 
 	public PlayingField(String server, String playerName) {
 		super();
@@ -57,40 +64,28 @@ public class PlayingField extends JPanel implements Runnable {
 		Action up = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				isUp = true;
-				isDown = false;
-				isRight = false;
-				isLeft = false;
+				isUp = true; isDown = false; isRight = false; isLeft = false;
 			}
 		};
 
 		Action down = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				isUp = false;
-				isDown = true;
-				isRight = false;
-				isLeft = false;
+				isUp = false; isDown = true; isRight = false; isLeft = false;
 			}
 		};
 
 		Action right = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				isUp = false;
-				isDown = false;
-				isRight = true;
-				isLeft = false;
+				isUp = false; isDown = false; isRight = true; isLeft = false;
 			}
 		};
 
 		Action left = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				isUp = false;
-				isDown = false;
-				isRight = false;
-				isLeft = true;
+				isUp = false; isDown = false; isRight = false; isLeft = true;
 			}
 		};
 
@@ -103,7 +98,6 @@ public class PlayingField extends JPanel implements Runnable {
     this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"), "rightPressed");
     this.getActionMap().put("rightPressed", right);
 
-		//start thread in constructor
 		t.start();
 	}
 
@@ -121,13 +115,25 @@ public class PlayingField extends JPanel implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D)g;
-		g2D.fillOval(dx, dy, 25, 25);
+		// g2D.fillOval(dx, dy, 25, 25);
+		int limit = playerCoordinates.size();
+		for(int i = 0; i < limit; i++) {
+			Point player = (Point) playerCoordinates.remove(0);
+			g2D.setColor(new Color((int)(Math.random() * 0x1000000)));			
+			g2D.fillOval(player.x, player.y, 25, 25);
+		}
+
+		// for(Iterator i = playerCoordinates.keySet().iterator(); i.hasNext();){
+		// 	String playerName = (String) i.next();
+		// 	Point point = (Point) playerCoordinates.remove(playerName);
+			// g2D.setColor(new Color((int)(Math.random() * 0x1000000)));	
+			// g2D.fillOval(point.x, point.y, 25, 25);
+			// sendMessage(player, message);	
+		// }
 	}
 
 	public synchronized void start() {
-		if(running) {
-			return;
-		}
+		if(running) return;
 
 		running = true;
 
@@ -136,15 +142,12 @@ public class PlayingField extends JPanel implements Runnable {
 	}
 
 	private synchronized void stop() {
-		if(!running) {
-			return;
-		}
+		if(!running) return;
 
 		running = false;
 		try {
 			thread.join();
-		}
-		catch(InterruptedException ie) {
+		} catch(InterruptedException ie) {
 			ie.printStackTrace();
 		}
 
@@ -193,20 +196,12 @@ public class PlayingField extends JPanel implements Runnable {
 				System.out.println("Connecting..");				
 				sendMessage("CONNECT "+ playerName);
 			} else if(isConnected) {
-				// if(dataFromServer.startsWith("PLAYER")) {
-				if(isUp) {
-					dy -= 1;
-				}
-				else if(isDown) {
-					dy += 1;
-				}
-				else if(isLeft) {
-					dx -= 1;
-				}
-				else if(isRight) {
-					dx += 1;
-				}
-				sendMessage("PLAYER "+ playerName + " "+ dx + " "+ dy);		
+				if(isUp) dy -= 1;
+				else if(isDown) dy += 1;
+				else if(isLeft) dx -= 1;
+				else if(isRight) dx += 1;
+				// playerCoordinates.add(new Point(dx, dy));				
+				sendMessage("PLAYER " + playerName + " "+ dx + " "+ dy);		
 				
 				byte[] buffer = new byte[256];
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -220,19 +215,20 @@ public class PlayingField extends JPanel implements Runnable {
 				dataFromServer = dataFromServer.trim();
 				System.out.println("data from server" + dataFromServer);
 
-				// String[] playersInfo = dataFromServer.split(":");
-				// 	for (int i=0;i<playersInfo.length;i++){
-				// 		String[] playerInfo = playersInfo[i].split(" ");
-				// 		String pname =playerInfo[1];
-						// int x = Integer.parseInt(playerInfo[2]);
-						// int y = Integer.parseInt(playerInfo[3]);
-						// System.out.println("x y " + x + " " + y);
-				// 	}
-				// System.out.println();
+				String[] playersInfo = dataFromServer.split(":");
+					for (int i=0;i<playersInfo.length;i++){
+						String[] playerInfo = playersInfo[i].split(" ");
+						try {
+							String pname = playerInfo[1];
+							int x = Integer.parseInt(playerInfo[2]);
+							int y = Integer.parseInt(playerInfo[3]);
+							playerCoordinates.add(new Point(x, y));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 				// !!!catch outofbounds exception!!!
-
 				repaint();
-				// }
 			}
 
 			try {
