@@ -19,6 +19,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Canvas;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -70,10 +71,14 @@ public class GamePanel extends JPanel {
 		this.add(createTopPanel(), BorderLayout.NORTH);
 		this.add(createLeftPanel(), BorderLayout.WEST);
 		this.add(createCenterPanel(), BorderLayout.CENTER);
+
+		playingField.start();
 	}
 
-	public JPanel createCenterPanel() {
-		playingField = new PlayingField("localhost", playerName);
+	public Canvas createCenterPanel() {
+		// playingField = new PlayingField("localhost", playerName);
+		playingField = new PlayingField();
+
 		return playingField;
 	}
 
