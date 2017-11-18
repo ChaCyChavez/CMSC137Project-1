@@ -17,8 +17,6 @@ public class PlayingField extends Canvas implements Runnable {
 
 		this.objects.add(new Circle(50, 50, "paula"));
 
-    this.objects.add(new Circle(100, 100, "paula"));
-
     //add objects or players here
     this.addKeyListener(new KeyInput(objects));
   }
