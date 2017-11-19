@@ -12,10 +12,15 @@ public class PlayingField extends Canvas implements Runnable {
 
   public LinkedList<GameObject> objects = new LinkedList<GameObject>();
   private GameObject tempObject;
+  private String playerName;
+
+  public PlayingField(String playerName) {
+    this.playerName = playerName;
+  }
 
   private void init() {
 
-		this.objects.add(new Circle(50, 50, "paula"));
+		this.objects.add(new Circle(50, 50, playerName));
 
     //add objects or players here
     this.addKeyListener(new KeyInput(objects));

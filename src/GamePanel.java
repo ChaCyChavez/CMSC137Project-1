@@ -76,8 +76,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public Canvas createCenterPanel() {
-		// playingField = new PlayingField("localhost", playerName);
-		playingField = new PlayingField();
+		playingField = new PlayingField(playerName);
 
 		return playingField;
 	}
