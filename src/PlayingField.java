@@ -28,6 +28,10 @@ public class PlayingField extends Canvas implements Runnable {
 
   private ArrayList playerCoordinates = new ArrayList();
 
+  public PlayingField(String playerName) {
+    this.playerName = playerName;
+  }
+  
   public PlayingField(String server, String playerName) {
     this.server = server;
     this.playerName = playerName;
@@ -87,6 +91,8 @@ public class PlayingField extends Canvas implements Runnable {
         delta--;
       }
       
+
+
       render(); //renders the background, renders each object
       frames++;
 
