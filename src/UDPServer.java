@@ -12,11 +12,11 @@ public class UDPServer implements Runnable {
     int playerLimit;
     Thread thread = new Thread(this);
 
-    public UDPServer (int playerLimit) {
+    public UDPServer (int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
 
         try {
-            serverDatagramSocket = new DatagramSocket(4444);
+            serverDatagramSocket = new DatagramSocket(portNumber);
             serverDatagramSocket.setSoTimeout(7000);
         } catch (Exception e) {
             e.printStackTrace();
