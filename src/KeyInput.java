@@ -16,10 +16,13 @@ public class KeyInput extends KeyAdapter {
     for(int i = 0; i < this.objects.size(); i++) {
       GameObject tempObject = this.objects.get(i);
 
-      if(key == KeyEvent.VK_D) tempObject.setVelX(5);
-      if(key == KeyEvent.VK_A) tempObject.setVelX(-5);
-      if(key == KeyEvent.VK_W) tempObject.setVelY(-5);
-      if(key == KeyEvent.VK_S) tempObject.setVelY(5);
+      if(tempObject.getName() == "paula") {
+
+        if(key == KeyEvent.VK_D) tempObject.setVelX(1);
+        if(key == KeyEvent.VK_A) tempObject.setVelX(-1);
+        if(key == KeyEvent.VK_W) tempObject.setVelY(-1);
+        if(key == KeyEvent.VK_S) tempObject.setVelY(1);
+      }
     }
 
     if(key == KeyEvent.VK_ESCAPE) System.exit(1);

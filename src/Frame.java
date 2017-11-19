@@ -19,7 +19,7 @@ public class Frame extends JFrame {
 
 	public Frame() {
 		super("Knock Out v.0.2");
-		this.setPreferredSize(new Dimension(800, 600));
+		this.setPreferredSize(new Dimension(1280, 720));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setContentPane(createMainPanel());
 		this.pack();

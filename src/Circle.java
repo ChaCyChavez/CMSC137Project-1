@@ -25,8 +25,27 @@ public class Circle extends GameObject {
       GameObject tempObject = objects.get(i);
       //check if other players
       //name can be used for identity
-      if(getBounds().intersects(tempObject.getBounds())) {
-        // System.out.println("collided");
+      if(tempObject.getName().equals("block")) {
+        if(getBounds().intersects(tempObject.getBounds())) {
+          
+          y = tempObject.getY() - height;
+          velY = 0;
+        }
+
+        if(getBoundsTop().intersects(tempObject.getBounds())) {
+          y = tempObject.getY() + 5;
+          velY = 0;
+        }
+
+        if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          x = tempObject.getX() + 5;
+          velX = 0;
+        }
+
+        if(getBoundsRight().intersects(tempObject.getBounds())) {
+          x = tempObject.getX() - width;
+          velX = 0;
+        }
       }
     }
   }

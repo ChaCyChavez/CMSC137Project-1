@@ -76,8 +76,8 @@ public class GamePanel extends JPanel {
 	}
 
 	public Canvas createCenterPanel() {
-		// playingField = new PlayingField("localhost", playerName);
-		playingField = new PlayingField();
+		playingField = new PlayingField("localhost", playerName);
+		// playingField = new PlayingField();
 
 		return playingField;
 	}
@@ -109,7 +109,7 @@ public class GamePanel extends JPanel {
 
 		gbc = new GridBagConstraints();
 
-		leftPanel.setPreferredSize(new Dimension(300, 600));
+		leftPanel.setPreferredSize(new Dimension(250, 600));
 
 		font = font.deriveFont(Font.PLAIN, 20);
 		conversation = new JTextPane();
