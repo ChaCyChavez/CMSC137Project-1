@@ -29,6 +29,9 @@ public class PlayingField extends Canvas implements Runnable {
 
   private ArrayList playerCoordinates = new ArrayList();
 
+  private float prevX = 0;
+  private float prevY = 0;
+
   public PlayingField(String playerName) {
     this.playerName = playerName;
     try {
@@ -106,34 +109,53 @@ public class PlayingField extends Canvas implements Runnable {
 				System.out.println("Connecting..");				
 				sendMessage("CONNECT " + playerName);
 			} else if (isConnected && completedPlayers){      
-        // if (dataFromServer.startsWith("PLAYER")){
-          long now = System.nanoTime();
-          delta += (now - lastTime) / ns;
-          lastTime = now;
-          while(delta >= 1) {     
-            tick(); //adjusts the position of each object
-            updates++;
-            delta--;
-          }
+        long now = System.nanoTime();
+        delta += (now - lastTime) / ns;
+        lastTime = now;
+        while(delta >= 1) {     
+          tick(); //adjusts the position of each object
+          updates++;
+          delta--;
+        }
+        
+        if (dataFromServer.startsWith("PLAYER")){
+          String[] playersInfo = dataFromServer.split(":");
+					for (int i = 0; i < playersInfo.length; i++){
+						String[] playerInfo = playersInfo[i].split(" ");
+						String pname = playerInfo[1];
+						float x = Float.parseFloat(playerInfo[2]);
+						float y = Float.parseFloat(playerInfo[3]);
+            for(int j = 0; j < this.objects.size(); j++) {
+              GameObject tempObject = this.objects.get(j);
+              if(pname.equals(tempObject.getName())) {
+                if (prevX != x || prevY != y){
+                  tempObject.setX(x);
+                  tempObject.setY(y);    
+                }
+                prevX = x;
+                prevY = y;            
+              }
+            }					
+					}
+        }
 
-          render(); //renders the background, renders each object
-          frames++;
+        render(); //renders the background, renders each object
+        frames++;
 
-          if(System.currentTimeMillis() - timer > 1000) {
-            timer += 1000;
-            // fps = frames;
-            // ticks = updates;
-            // System.out.println("FPS: " + frames + " TICKS: " + updates);
-            frames = 0;
-            updates = 0;
-          }
-				// }			
+        if(System.currentTimeMillis() - timer > 1000) {
+          timer += 1000;
+          // fps = frames;
+          // ticks = updates;
+          // System.out.println("FPS: " + frames + " TICKS: " + updates);
+          frames = 0;
+          updates = 0;
+        }			
 			} else if(isConnected) {
         if (dataFromServer.startsWith("PLAYER_LIST")) {
           String[] playerNames = dataFromServer.split(" ");
 					for (int i = 1; i < playerNames.length; i++){
-            // System.out.println("PlayingField player: " + playerNames[i]);
-            this.objects.add(new Circle(50 + (50 * i), 50 + (50 * i), playerNames[i], packet.getAddress(), packet.getPort()));
+            System.out.println("PlayingField player: " + playerNames[i]);
+            this.objects.add(new Circle(50, 50, playerNames[i], packet.getAddress(), packet.getPort()));
           }
           completedPlayers = true;
           this.addKeyListener(new KeyInput(objects, playerName));

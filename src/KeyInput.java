@@ -17,13 +17,11 @@ public class KeyInput extends KeyAdapter {
 
     for(int i = 0; i < this.objects.size(); i++) {
       GameObject tempObject = this.objects.get(i);
-
-      if(tempObject.getName() == playerName) {
-
-        if(key == KeyEvent.VK_D) tempObject.setVelX(1);
-        if(key == KeyEvent.VK_A) tempObject.setVelX(-1);
-        if(key == KeyEvent.VK_W) tempObject.setVelY(-1);
-        if(key == KeyEvent.VK_S) tempObject.setVelY(1);
+      if(tempObject.getName().equals(playerName)) {
+        if(key == KeyEvent.VK_D) tempObject.setVelX(3);
+        if(key == KeyEvent.VK_A) tempObject.setVelX(-3);
+        if(key == KeyEvent.VK_W) tempObject.setVelY(-3);
+        if(key == KeyEvent.VK_S) tempObject.setVelY(3);
       }
     }
 

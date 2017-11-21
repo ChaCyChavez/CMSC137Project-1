@@ -12,7 +12,7 @@ public abstract class GameObject {
   public float x, y;
   public String objectName;
   public float velX = 0, velY = 0;
-  private Color playerColor;
+  public Color playerColor;
 
   public GameObject(float x, float y, String name, InetAddress inetAddress, int portNumber) {
     this.x = x;

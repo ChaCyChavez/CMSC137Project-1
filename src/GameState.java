@@ -22,8 +22,9 @@ public class GameState {
 			String playerName = (String) i.next();
 			Circle player = (Circle) gamePlayers.get(playerName);
 			game += player.playerToString() + ":";
-            System.out.println(game);
 		}
+        System.out.println(game);
+        
 
 		return game;
     }

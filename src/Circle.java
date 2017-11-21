@@ -12,25 +12,35 @@ import java.util.LinkedList;
 public class Circle extends GameObject {
 
   private float width = 40, height = 40;
+  private DatagramSocket socket;
+  private float prevX;
+  private float prevY;
 
   public Circle(float x, float y, String name, InetAddress inetAddress, int portNumber) {
     super(x, y, name, inetAddress, portNumber);
+    try {
+      socket = new DatagramSocket();      
+    } catch (Exception e) {
+    }
   }
 
   public void tick(LinkedList<GameObject> objects) {
+    prevX = x; 
+    prevY = y;
     x += velX;
     y += velY;
 
-    String message = "PLAYER " + objectName + " " + x + " " + y;
+    if (prevX != x || prevY != y){
+      String message = "PLAYER " + objectName + " " + x + " " + y;
 
-    try {
-      DatagramSocket socket = new DatagramSocket();
-      byte[] buffer = message.getBytes();
-      InetAddress address = InetAddress.getByName("localhost");
-      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
-      socket.send(packet);
-    } catch (Exception e) {
-      e.printStackTrace();
+      try {
+        byte[] buffer = message.getBytes();
+        InetAddress address = InetAddress.getByName("localhost");
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
+        socket.send(packet);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 
     collision(objects);
@@ -67,7 +77,7 @@ public class Circle extends GameObject {
   }
 
   public void render(Graphics g) {
-    g.setColor(Color.blue);
+    g.setColor(playerColor);
     g.fillOval((int)x, (int)y, (int)width, (int)height);
 
     Graphics2D g2d = (Graphics2D) g;
