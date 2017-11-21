@@ -88,8 +88,8 @@ public class UDPServer implements Runnable {
                     if (playerData.startsWith("PLAYER")){
                         String[] playerPosition = playerData.split(" ");	 //Tokenize:				  
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
-                        int xPosition = Integer.parseInt(playerPosition[2].trim());
-                        int yPosition = Integer.parseInt(playerPosition[3].trim());
+                        float xPosition = Float.parseFloat(playerPosition[2].trim());
+                        float yPosition = Float.parseFloat(playerPosition[3].trim());
                         GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);	//Get the player from the game state				  
                         player.setX(xPosition);
                         player.setY(yPosition);

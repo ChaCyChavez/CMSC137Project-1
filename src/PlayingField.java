@@ -52,7 +52,6 @@ public class PlayingField extends Canvas implements Runnable {
 
     //add objects or players here
 
-    this.addKeyListener(new KeyInput(objects, playerName));
   }
 
   public synchronized void start() {
@@ -107,7 +106,7 @@ public class PlayingField extends Canvas implements Runnable {
 				System.out.println("Connecting..");				
 				sendMessage("CONNECT " + playerName);
 			} else if (isConnected && completedPlayers){      
-        if (dataFromServer.startsWith("PLAYER")){
+        // if (dataFromServer.startsWith("PLAYER")){
           long now = System.nanoTime();
           delta += (now - lastTime) / ns;
           lastTime = now;
@@ -124,20 +123,21 @@ public class PlayingField extends Canvas implements Runnable {
             timer += 1000;
             // fps = frames;
             // ticks = updates;
-            System.out.println("FPS: " + frames + " TICKS: " + updates);
+            // System.out.println("FPS: " + frames + " TICKS: " + updates);
             frames = 0;
             updates = 0;
           }
-				}			
+				// }			
 			} else if(isConnected) {
         if (dataFromServer.startsWith("PLAYER_LIST")) {
           String[] playerNames = dataFromServer.split(" ");
 					for (int i = 1; i < playerNames.length; i++){
             // System.out.println("PlayingField player: " + playerNames[i]);
-            this.objects.add(new Circle(50, 50, playerNames[i]));
+            this.objects.add(new Circle(50 + (50 * i), 50 + (50 * i), playerNames[i], packet.getAddress(), packet.getPort()));
           }
+          completedPlayers = true;
+          this.addKeyListener(new KeyInput(objects, playerName));
         }
-        completedPlayers = true;
       }
     }
   }

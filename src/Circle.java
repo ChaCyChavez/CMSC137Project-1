@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import java.net.InetAddress;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 import java.util.LinkedList;
 
@@ -18,6 +20,18 @@ public class Circle extends GameObject {
   public void tick(LinkedList<GameObject> objects) {
     x += velX;
     y += velY;
+
+    String message = "PLAYER " + objectName + " " + x + " " + y;
+
+    try {
+      DatagramSocket socket = new DatagramSocket();
+      byte[] buffer = message.getBytes();
+      InetAddress address = InetAddress.getByName("localhost");
+      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
+      socket.send(packet);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     collision(objects);
   }
