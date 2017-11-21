@@ -12,6 +12,8 @@ public class UDPServer implements Runnable {
     int playerLimit;
     Thread thread = new Thread(this);
 
+    String players = "PLAYER_LIST ";
+
     public UDPServer (int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
 
@@ -68,6 +70,7 @@ public class UDPServer implements Runnable {
                         gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                         System.out.println("Player connected: " + playerDataTokens[1]);                        
                         broadcast("CONNECTED " + playerDataTokens[1]);
+                        players += playerDataTokens[1] + " ";
                         connectedPlayers++;
                         if (connectedPlayers == playerLimit){
                             stage = 0; //public static final int GAME_START=0;
@@ -76,7 +79,7 @@ public class UDPServer implements Runnable {
                     break;
                 case 0: //GAME_START
                     System.out.println("Game State: START");
-                    broadcast("START");
+                    broadcast(players);
                     stage = 1; //IN_PROGRESS
                     break;
                 case 1: //IN_PROGRESS
