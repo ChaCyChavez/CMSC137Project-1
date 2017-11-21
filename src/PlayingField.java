@@ -25,6 +25,7 @@ public class PlayingField extends Canvas implements Runnable {
   private String dataFromServer;
   private DatagramSocket socket;
   private boolean isConnected = false;
+  private boolean completedPlayers = false;
 
   private ArrayList playerCoordinates = new ArrayList();
 
@@ -32,6 +33,7 @@ public class PlayingField extends Canvas implements Runnable {
     this.playerName = playerName;
     try {
       socket = new DatagramSocket();
+      socket.setSoTimeout(100);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -82,16 +84,18 @@ public class PlayingField extends Canvas implements Runnable {
     long timer = System.currentTimeMillis();
     int updates = 0;
     int frames = 0;
-    while(running) {
-      try{
-        Thread.sleep(1);
-      }catch(Exception ioe){}
+    while(true) {
+      // try{
+      //   Thread.sleep(1);
+      // }catch(Exception ioe){}
             
       byte[] buf = new byte[256]; //Get the data from players
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try{
-          socket.receive(packet);
-      } catch(Exception ioe){/*lazy exception handling :)*/}
+        socket.receive(packet);
+      } catch(Exception e){
+        // e.printStackTrace();
+      }
       
       dataFromServer = new String(buf);
       dataFromServer = dataFromServer.trim();
@@ -102,14 +106,7 @@ public class PlayingField extends Canvas implements Runnable {
 			} else if (!isConnected){
 				System.out.println("Connecting..");				
 				sendMessage("CONNECT " + playerName);
-			} else if (isConnected){
-				if (dataFromServer.startsWith("PLAYER_LIST")) {
-          String[] playerNames = dataFromServer.split(" ");
-					for (int i = 1; i < playerNames.length; i++){
-            System.out.println("PlayingField player: " + playerNames[i]);
-          }
-        }
-        
+			} else if (isConnected && completedPlayers){      
         if (dataFromServer.startsWith("PLAYER")){
           long now = System.nanoTime();
           delta += (now - lastTime) / ns;
@@ -132,7 +129,16 @@ public class PlayingField extends Canvas implements Runnable {
             updates = 0;
           }
 				}			
-			}
+			} else if(isConnected) {
+        if (dataFromServer.startsWith("PLAYER_LIST")) {
+          String[] playerNames = dataFromServer.split(" ");
+					for (int i = 1; i < playerNames.length; i++){
+            // System.out.println("PlayingField player: " + playerNames[i]);
+            this.objects.add(new Circle(50, 50, playerNames[i]));
+          }
+        }
+        completedPlayers = true;
+      }
     }
   }
 

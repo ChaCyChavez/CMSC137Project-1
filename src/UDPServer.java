@@ -66,14 +66,16 @@ public class UDPServer implements Runnable {
                     if(playerData.startsWith("CONNECT")) {
                         String playerDataTokens[] = playerData.split(" "); //split playerData by space
                         System.out.println("playerDataToken[1] = " + playerDataTokens[1]);                        
-                        Circle player = new Circle(50, 50, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
-                        gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
-                        System.out.println("Player connected: " + playerDataTokens[1]);                        
-                        broadcast("CONNECTED " + playerDataTokens[1]);
-                        players += playerDataTokens[1] + " ";
-                        connectedPlayers++;
-                        if (connectedPlayers == playerLimit){
-                            stage = 0; //public static final int GAME_START=0;
+                        if(!players.contains(playerDataTokens[1])) {    
+                            Circle player = new Circle(50, 50, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
+                            gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
+                            System.out.println("Player connected: " + playerDataTokens[1]);                        
+                            broadcast("CONNECTED " + playerDataTokens[1]);
+                            players += playerDataTokens[1] + " ";
+                            connectedPlayers++;
+                            if (connectedPlayers == playerLimit){
+                                stage = 0; //public static final int GAME_START=0;
+                            }
                         }
                     }
                     break;
