@@ -3,14 +3,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import java.net.InetAddress;
+
 import java.util.LinkedList;
 
 public class Circle extends GameObject {
 
   private float width = 40, height = 40;
 
-  public Circle(float x, float y, String name) {
-    super(x, y, name);
+  public Circle(float x, float y, String name, InetAddress inetAddress, int portNumber) {
+    super(x, y, name, inetAddress, portNumber);
   }
 
   public void tick(LinkedList<GameObject> objects) {

@@ -12,11 +12,13 @@ public class UDPServer implements Runnable {
     int playerLimit;
     Thread thread = new Thread(this);
 
+    String players = "PLAYER_LIST";
+
     public UDPServer (int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
 
         try {
-            serverDatagramSocket = new DatagramSocket(portNumber);
+            serverDatagramSocket = new DatagramSocket(4444);
             serverDatagramSocket.setSoTimeout(7000);
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,12 +31,12 @@ public class UDPServer implements Runnable {
         //iterate through players from getGamePlayers method of GameState
         for(Iterator i = gameState.getGamePlayers().keySet().iterator(); i.hasNext();){
 			String playerName = (String) i.next();
-			GamePlayer player = (GamePlayer) gameState.getGamePlayers().get(playerName);			
+			GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);			
 			sendMessage(player, message);	
 		}
     }
 
-    public void sendMessage(GamePlayer gamePlayer, String message) { //send message to a player
+    public void sendMessage(GameObject gamePlayer, String message) { //send message to a player
         byte buffer[] = message.getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, gamePlayer.getInetAddress(), gamePlayer.getPortNumber());
         try {
@@ -64,10 +66,11 @@ public class UDPServer implements Runnable {
                     if(playerData.startsWith("CONNECT")) {
                         String playerDataTokens[] = playerData.split(" "); //split playerData by space
                         System.out.println("playerDataToken[1] = " + playerDataTokens[1]);                        
-                        GamePlayer player = new GamePlayer(playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
+                        Circle player = new Circle(50, 50, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
                         gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                         System.out.println("Player connected: " + playerDataTokens[1]);                        
                         broadcast("CONNECTED " + playerDataTokens[1]);
+                        players += playerDataTokens[1] + " ";
                         connectedPlayers++;
                         if (connectedPlayers == playerLimit){
                             stage = 0; //public static final int GAME_START=0;
@@ -76,7 +79,7 @@ public class UDPServer implements Runnable {
                     break;
                 case 0: //GAME_START
                     System.out.println("Game State: START");
-                    broadcast("START");
+                    broadcast(players);
                     stage = 1; //IN_PROGRESS
                     break;
                 case 1: //IN_PROGRESS
@@ -85,7 +88,7 @@ public class UDPServer implements Runnable {
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
                         int xPosition = Integer.parseInt(playerPosition[2].trim());
                         int yPosition = Integer.parseInt(playerPosition[3].trim());
-                        GamePlayer player = (GamePlayer) gameState.getGamePlayers().get(playerName);	//Get the player from the game state				  
+                        GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);	//Get the player from the game state				  
                         player.setX(xPosition);
                         player.setY(yPosition);
                         gameState.update(playerName, player); //Update current player in hashmap of players

@@ -4,10 +4,12 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
 public class KeyInput extends KeyAdapter {
-  LinkedList<GameObject> objects;
+  public LinkedList<GameObject> objects;
+  private String playerName;
 
-  public KeyInput(LinkedList<GameObject> objects) {
+  public KeyInput(LinkedList<GameObject> objects, String playerName) {
     this.objects = objects;
+    this.playerName = playerName;
   }
 
   public void keyPressed(KeyEvent e) {
@@ -16,7 +18,7 @@ public class KeyInput extends KeyAdapter {
     for(int i = 0; i < this.objects.size(); i++) {
       GameObject tempObject = this.objects.get(i);
 
-      if(tempObject.getName() == "paula") {
+      if(tempObject.getName() == playerName) {
 
         if(key == KeyEvent.VK_D) tempObject.setVelX(1);
         if(key == KeyEvent.VK_A) tempObject.setVelX(-1);

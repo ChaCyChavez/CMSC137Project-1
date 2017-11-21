@@ -8,7 +8,7 @@ public class GameState {
 
     } 
 
-    public void update(String playerName, GamePlayer player) {
+    public void update(String playerName, GameObject player) {
         gamePlayers.put(playerName, player);
     }
 
@@ -20,7 +20,7 @@ public class GameState {
         String game = "";
         for(Iterator i = gamePlayers.keySet().iterator(); i.hasNext();){
 			String playerName = (String) i.next();
-			GamePlayer player = (GamePlayer) gamePlayers.get(playerName);
+			Circle player = (Circle) gamePlayers.get(playerName);
 			game += player.playerToString() + ":";
             System.out.println(game);
 		}
