@@ -12,7 +12,7 @@ public class UDPServer implements Runnable {
     int playerLimit;
     Thread thread = new Thread(this);
 
-    String players = "PLAYER_LIST";
+    String players = "PLAYER_LIST ";
 
     public UDPServer (int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
