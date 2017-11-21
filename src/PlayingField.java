@@ -48,10 +48,10 @@ public class PlayingField extends Canvas implements Runnable {
 
     // this.objects.add(new Block(100, 100, 50, 50));
 
-    // this.objects.add(new Block(5, 0, 1014, 5));
-    // this.objects.add(new Block(1014, 5, 5, 610));
-    // this.objects.add(new Block(0, 610, 1014, 5));
-    // this.objects.add(new Block(0, 0, 5, 610));
+    this.objects.add(new Block(5, 0, 1014, 5));
+    this.objects.add(new Block(1014, 5, 5, 610));
+    this.objects.add(new Block(0, 610, 1014, 5));
+    this.objects.add(new Block(0, 0, 5, 610));
 
     //add objects or players here
 
@@ -127,7 +127,7 @@ public class PlayingField extends Canvas implements Runnable {
 						float y = Float.parseFloat(playerInfo[3]);
             for(int j = 0; j < this.objects.size(); j++) {
               GameObject tempObject = this.objects.get(j);
-              if(pname.equals(tempObject.getName())) {
+              if(pname.equals(tempObject.getName()) && !pname.equals(playerName)) {
                 if (prevX != x || prevY != y){
                   tempObject.setX(x);
                   tempObject.setY(y);    
