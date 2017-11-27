@@ -14,7 +14,6 @@ public abstract class GameObject {
   public float velX = 0, velY = 0;
   public Color playerColor;
   public String objectType;
-  private Boolean isAlive = true;
   public int score = 0;
 
   public GameObject(float x, float y, String name, InetAddress inetAddress, int portNumber, String objectType) {
@@ -76,14 +75,6 @@ public abstract class GameObject {
 	public int getPortNumber(){
 		return portNumber;
 	}
-
-  public void nowDead() {
-    this.isAlive = false;
-  }
-
-  public Boolean isAlive() {
-    return isAlive;
-  }
 
   public void setScore(int s) {
     this.score += s;

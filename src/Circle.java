@@ -73,25 +73,30 @@ public class Circle extends GameObject {
         }
       } else if(tempObject.getName().startsWith("food")) {
         if(getBounds().intersects(tempObject.getBounds())) {
-          
+          score += 5;
           width += 2;
           height += 2;
           objects.remove(tempObject);
         }
 
         if(getBoundsTop().intersects(tempObject.getBounds())) {
+          score += 5;
           width += 2;
           height += 2;
           objects.remove(tempObject);
         }
 
         if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          score += 5;
           width += 2;
           height += 2;
           objects.remove(tempObject);
         }
 
         if(getBoundsRight().intersects(tempObject.getBounds())) {
+          score += 5;
+          width += 2;
+          height += 2;
           objects.remove(tempObject);
         }
       } else if(tempObject.getName().startsWith("bomb")) {
@@ -106,7 +111,6 @@ public class Circle extends GameObject {
         }
 
         if(getBoundsLeft().intersects(tempObject.getBounds())) {
-
           objects.remove(this);
           objects.remove(tempObject);
         }
@@ -114,39 +118,61 @@ public class Circle extends GameObject {
         if(getBoundsRight().intersects(tempObject.getBounds())) {
           objects.remove(this);
           objects.remove(tempObject);
+        }
       } else if(tempObject.getType().equals("circle")) { //collided with other players
         Circle temp = (Circle) tempObject;
-        if(getBounds().intersects(tempObject.getBounds()) && 
-          !tempObject.getName().equals(objectName) &&
-          isAlive() && tempObject.isAlive() &&
-          temp.getWidth() < getWidth()) {
-            System.out.println("width" + width + "height" + height);
-            System.out.println("width" + temp.getWidth() + "height" + temp.getHeight());
+        if(getBounds().intersects(tempObject.getBounds())) {
+          if(temp.getWidth() < this.getWidth()) {
             width += temp.getWidth()/2;
             height += temp.getHeight()/2;
             score += 15;
-            tempObject.nowDead();
+            objects.remove(tempObject);
+          }
+        }
+
+        if(getBoundsTop().intersects(tempObject.getBounds())) {
+          if(temp.getWidth() < this.getWidth()) {
+            width += temp.getWidth()/2;
+            height += temp.getHeight()/2;
+            score += 15;
+            objects.remove(tempObject);
+          }
+        }
+
+        if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          if(temp.getWidth() < this.getWidth()) {
+            width += temp.getWidth()/2;
+            height += temp.getHeight()/2;
+            score += 15;
+            objects.remove(tempObject);
+          }
+        }
+
+        if(getBoundsRight().intersects(tempObject.getBounds())) {
+          if(temp.getWidth() < this.getWidth()) {
+            width += temp.getWidth()/2;
+            height += temp.getHeight()/2;
+            score += 15;
+            objects.remove(tempObject);
+          }
         }
       }
     }
   }
-}
 
   public void render(Graphics g) {
-    if(this.isAlive()) {
-      g.setColor(playerColor);
-      g.fillOval((int)x, (int)y, (int)width, (int)height);
+    g.setColor(playerColor);
+    g.fillOval((int)x, (int)y, (int)width, (int)height);
 
-      Graphics2D g2d = (Graphics2D) g;
-      g.setColor(Color.white);
-      g2d.drawString(this.objectName, (int)(x+(width/2)), (int)(y+height));
-      g2d.drawString(Integer.toString(this.score), (int)(x+(width/2)), (int)y);
-      g.setColor(Color.yellow);
-      g2d.draw(getBounds());
-      g2d.draw(getBoundsRight());
-      g2d.draw(getBoundsLeft());
-      g2d.draw(getBoundsTop());
-    }
+    Graphics2D g2d = (Graphics2D) g;
+    g.setColor(Color.white);
+    g2d.drawString(this.objectName, (int)(x+(width/2)), (int)(y+height));
+    g2d.drawString(Integer.toString(this.score), (int)(x+(width/2)), (int)y);
+    g.setColor(Color.yellow);
+    g2d.draw(getBounds());
+    g2d.draw(getBoundsRight());
+    g2d.draw(getBoundsLeft());
+    g2d.draw(getBoundsTop());
   }
 
   public Rectangle getBounds() {
