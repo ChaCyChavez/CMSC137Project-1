@@ -31,7 +31,7 @@ public class Circle extends GameObject {
     y += velY;
 
     if (prevX != x || prevY != y){
-      String message = "PLAYER " + objectName + " " + x + " " + y;
+      String message = "PLAYER " + objectName + " " + x + " " + y + " " + score;
 
       try {
         byte[] buffer = message.getBytes();
@@ -81,6 +81,7 @@ public class Circle extends GameObject {
             System.out.println("width" + temp.getWidth() + "height" + temp.getHeight());
             width += temp.getWidth()/2;
             height += temp.getHeight()/2;
+            score += 15;
             tempObject.nowDead();
         }
       }
@@ -95,6 +96,7 @@ public class Circle extends GameObject {
       Graphics2D g2d = (Graphics2D) g;
       g.setColor(Color.white);
       g2d.drawString(this.objectName, (int)(x+(width/2)), (int)(y+height));
+      g2d.drawString(Integer.toString(this.score), (int)(x+(width/2)), (int)y);
       g.setColor(Color.yellow);
       g2d.draw(getBounds());
       g2d.draw(getBoundsRight());

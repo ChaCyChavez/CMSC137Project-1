@@ -15,6 +15,7 @@ public abstract class GameObject {
   public Color playerColor;
   public String objectType;
   private Boolean isAlive = true;
+  public int score = 0;
 
   public GameObject(float x, float y, String name, InetAddress inetAddress, int portNumber, String objectType) {
     this.x = x;
@@ -82,5 +83,9 @@ public abstract class GameObject {
 
   public Boolean isAlive() {
     return isAlive;
+  }
+
+  public void setScore(int s) {
+    this.score += s;
   }
 }
