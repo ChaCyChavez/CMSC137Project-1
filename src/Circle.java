@@ -72,6 +72,49 @@ public class Circle extends GameObject {
           x = tempObject.getX() - width;
           velX = 0;
         }
+      } else if(tempObject.getName().startsWith("food")) {
+        if(getBounds().intersects(tempObject.getBounds())) {
+          
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsTop().intersects(tempObject.getBounds())) {
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsRight().intersects(tempObject.getBounds())) {
+          objects.remove(tempObject);
+        }
+      } else if(tempObject.getName().startsWith("bomb")) {
+        if(getBounds().intersects(tempObject.getBounds())) {
+          objects.remove(this);
+        }
+
+        if(getBoundsTop().intersects(tempObject.getBounds())) {
+          objects.remove(this);
+        }
+
+        if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          width += 2;
+          height += 2;
+          objects.remove(this);
+        }
+
+        if(getBoundsRight().intersects(tempObject.getBounds())) {
+          width += 2;
+          height += 2;
+          objects.remove(this);
+        }
       }
     }
   }
