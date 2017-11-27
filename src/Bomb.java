@@ -16,8 +16,10 @@ public class Bomb extends GameObject {
   }
 
   public void tick(LinkedList<GameObject> objects) {
-    x += velX;
-    y += velY;
+    //x += velX;
+    //y += velY;
+    setX(getX()+getVelX());
+    setY(getY()+getVelY());
 
     collision(objects);
   }
@@ -35,13 +37,13 @@ public class Bomb extends GameObject {
 
   public void render(Graphics g) {
     g.setColor(Color.red);
-    g.fillOval((int)x, (int)y, (int)width, (int)height);
+    g.fillOval((int)getX(), (int)getY(), (int)width, (int)height);
 
     Graphics2D g2d = (Graphics2D) g;
   }
 
   public Rectangle getBounds() {
-    return new Rectangle((int)x , (int) y, (int)width, (int)height);
+    return new Rectangle((int)getX(), (int)getY(), (int)width, (int)height);
   }
 
 }

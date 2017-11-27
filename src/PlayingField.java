@@ -118,9 +118,11 @@ public class PlayingField extends Canvas implements Runnable {
 						String pname = playerInfo[1];
 						float x = Float.parseFloat(playerInfo[2]);
 						float y = Float.parseFloat(playerInfo[3]);
+            Boolean alive = Boolean.parseBoolean(playerInfo[5]);
             for(int j = 0; j < this.objects.size(); j++) {
               GameObject tempObject = this.objects.get(j);
               if(pname.equals(tempObject.getName()) && !pname.equals(playerName)) {
+                if(!alive) tempObject.isDead();
                 if (prevX != x || prevY != y){
                   tempObject.setX(x);
                   tempObject.setY(y);    

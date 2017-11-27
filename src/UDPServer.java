@@ -127,15 +127,27 @@ public class UDPServer implements Runnable {
                         float xPosition = Float.parseFloat(playerPosition[2].trim());
                         float yPosition = Float.parseFloat(playerPosition[3].trim());
                         int score = Integer.parseInt(playerPosition[4].trim());
+                        Boolean alive = Boolean.parseBoolean(playerPosition[5].trim());
                         GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);	//Get the player from the game state				  
                         player.setX(xPosition);
                         player.setY(yPosition);
                         player.setScore(score);
+                        if(!alive) player.isDead(); 
                         gameState.update(playerName, player); //Update current player in hashmap of players
                         broadcast(gameState.gameToString()); //Send to all the updated game state
 					}
 					break;
             }
+
+            int remaining = 0;
+            for(Iterator i = gameState.getGamePlayers().keySet().iterator(); i.hasNext();){
+                String playerName = (String) i.next();
+                GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);			
+                if(player.getType().equals("circle") && player.isAlive()) {
+                    remaining += 1;
+                }
+            }
+            System.out.println("Remaining" + remaining);
         }
     }
 }

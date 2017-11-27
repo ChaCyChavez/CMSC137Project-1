@@ -25,13 +25,20 @@ public class Circle extends GameObject {
   }
 
   public void tick(LinkedList<GameObject> objects) {
-    prevX = x; 
-    prevY = y;
-    x += velX;
-    y += velY;
+    prevX = getX(); 
+    prevY = getY();
+    //x += velX;
+    //y += velY;
+    setX(getX()+getVelX());
+    setY(getY()+getVelY());
 
-    if (prevX != x || prevY != y){
-      String message = "PLAYER " + objectName + " " + x + " " + y + " " + score;
+    if (prevX != getX() || prevY != getY()){
+      String message = "PLAYER " + 
+                        getName() + " " + 
+                        getX() + " " + 
+                        getY() + " " + 
+                        getScore() + " " +
+                        isAlive();
 
       try {
         byte[] buffer = message.getBytes();
@@ -53,106 +60,56 @@ public class Circle extends GameObject {
       //name can be used for identity
       if(tempObject.getType().equals("block")) {
         if(getBounds().intersects(tempObject.getBounds())) {
-          y = tempObject.getY() - height;
-          velY = 0;
+          setY(tempObject.getY() - height);
+          setVelY(0);
         }
 
         if(getBoundsTop().intersects(tempObject.getBounds())) {
-          y = tempObject.getY() + 5;
-          velY = 0;
+          setY(tempObject.getY() + 5);
+          setVelY(0);
         }
 
         if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          x = tempObject.getX() + 5;
-          velX = 0;
+          setX(tempObject.getX() + 5);
+          setVelX(0);
         }
 
         if(getBoundsRight().intersects(tempObject.getBounds())) {
-          x = tempObject.getX() - width;
-          velX = 0;
+          setX(tempObject.getX() - width);
+          setVelX(0);
         }
       } else if(tempObject.getName().startsWith("food")) {
-        if(getBounds().intersects(tempObject.getBounds())) {
-          score += 5;
-          width += 2;
-          height += 2;
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsTop().intersects(tempObject.getBounds())) {
-          score += 5;
-          width += 2;
-          height += 2;
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          score += 5;
-          width += 2;
-          height += 2;
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsRight().intersects(tempObject.getBounds())) {
-          score += 5;
+        if(getBounds().intersects(tempObject.getBounds()) ||
+          getBoundsTop().intersects(tempObject.getBounds()) ||
+          getBoundsLeft().intersects(tempObject.getBounds()) ||
+          getBoundsRight().intersects(tempObject.getBounds())
+        ) {
+          setScore(getScore() + 5);
           width += 2;
           height += 2;
           objects.remove(tempObject);
         }
       } else if(tempObject.getName().startsWith("bomb")) {
-        if(getBounds().intersects(tempObject.getBounds())) {
-          objects.remove(this);
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsTop().intersects(tempObject.getBounds())) {
-          objects.remove(this);
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          objects.remove(this);
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsRight().intersects(tempObject.getBounds())) {
+        if(getBounds().intersects(tempObject.getBounds()) ||
+          getBoundsTop().intersects(tempObject.getBounds()) ||
+          getBoundsLeft().intersects(tempObject.getBounds()) ||
+          getBoundsRight().intersects(tempObject.getBounds())
+        ) {
           objects.remove(this);
           objects.remove(tempObject);
         }
       } else if(tempObject.getType().equals("circle")) { //collided with other players
         Circle temp = (Circle) tempObject;
-        if(getBounds().intersects(tempObject.getBounds())) {
+        if(getBounds().intersects(tempObject.getBounds()) ||
+          getBoundsTop().intersects(tempObject.getBounds()) ||
+          getBoundsLeft().intersects(tempObject.getBounds()) ||
+          getBoundsRight().intersects(tempObject.getBounds())
+        ) {
           if(temp.getWidth() < this.getWidth()) {
             width += temp.getWidth()/2;
             height += temp.getHeight()/2;
-            score += 15;
-            objects.remove(tempObject);
-          }
-        }
-
-        if(getBoundsTop().intersects(tempObject.getBounds())) {
-          if(temp.getWidth() < this.getWidth()) {
-            width += temp.getWidth()/2;
-            height += temp.getHeight()/2;
-            score += 15;
-            objects.remove(tempObject);
-          }
-        }
-
-        if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          if(temp.getWidth() < this.getWidth()) {
-            width += temp.getWidth()/2;
-            height += temp.getHeight()/2;
-            score += 15;
-            objects.remove(tempObject);
-          }
-        }
-
-        if(getBoundsRight().intersects(tempObject.getBounds())) {
-          if(temp.getWidth() < this.getWidth()) {
-            width += temp.getWidth()/2;
-            height += temp.getHeight()/2;
-            score += 15;
+            setScore(getScore() + 15);
+            tempObject.isDead();
             objects.remove(tempObject);
           }
         }
@@ -161,13 +118,13 @@ public class Circle extends GameObject {
   }
 
   public void render(Graphics g) {
-    g.setColor(playerColor);
-    g.fillOval((int)x, (int)y, (int)width, (int)height);
+    g.setColor(getColor());
+    g.fillOval((int)getX(), (int)getY(), (int)width, (int)height);
 
     Graphics2D g2d = (Graphics2D) g;
     g.setColor(Color.white);
-    g2d.drawString(this.objectName, (int)(x+(width/2)), (int)(y+height));
-    g2d.drawString(Integer.toString(this.score), (int)(x+(width/2)), (int)y);
+    g2d.drawString(getName(), (int)(getX()+(width/2)), (int)(getY()+height));
+    g2d.drawString(Integer.toString(this.getScore()), (int)(getX()+(width/2)), (int)getY());
     g.setColor(Color.yellow);
     g2d.draw(getBounds());
     g2d.draw(getBoundsRight());
@@ -176,16 +133,16 @@ public class Circle extends GameObject {
   }
 
   public Rectangle getBounds() {
-    return new Rectangle((int) ((int)x + (width/2) - ((width/2)/2)), (int) ((int)y+(height/2)), (int)width/2, (int)height/2);
+    return new Rectangle((int) ((int)getX() + (width/2) - ((width/2)/2)), (int) ((int)getY()+(height/2)), (int)width/2, (int)height/2);
   }
   public Rectangle getBoundsTop() {
-    return new Rectangle((int) ((int)x + (width/2) - ((width/2)/2)), (int)y, (int)width/2, (int)height/2);
+    return new Rectangle((int) ((int)getX() + (width/2) - ((width/2)/2)), (int)getY(), (int)width/2, (int)height/2);
   }
   public Rectangle getBoundsRight() {
-    return new Rectangle((int)((int)x + width - 5), (int)y, (int)5, (int)height);
+    return new Rectangle((int)((int)getX() + width - 5), (int)getY(), (int)5, (int)height);
   }
   public Rectangle getBoundsLeft() {
-    return new Rectangle((int)x, (int)y, (int)5, (int)height);
+    return new Rectangle((int)getX(), (int)getY(), (int)5, (int)height);
   }
 
   public float getHeight() {

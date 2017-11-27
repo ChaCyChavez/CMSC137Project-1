@@ -9,12 +9,13 @@ import java.util.LinkedList;
 public abstract class GameObject {
   private InetAddress inetAddress;
   private int portNumber;
-  public float x, y;
-  public String objectName;
-  public float velX = 0, velY = 0;
-  public Color playerColor;
-  public String objectType;
-  public int score = 0;
+  private float x, y;
+  private String objectName;
+  private float velX = 0, velY = 0;
+  private Color playerColor;
+  private String objectType;
+  private int score = 0;
+  private Boolean isAlive = true;
 
   public GameObject(float x, float y, String name, InetAddress inetAddress, int portNumber, String objectType) {
     this.x = x;
@@ -64,8 +65,12 @@ public abstract class GameObject {
       return this.objectType;
   }
 
+  public Color getColor() {
+    return this.playerColor;
+  }
+
   public String playerToString(){ /*** String representation. used for transfer over the network */
-		return ("PLAYER " + objectName + " " + x + " " + y + " " + Integer.toString(playerColor.getRGB()));
+		return ("PLAYER " + objectName + " " + x + " " + y + " " + score + " " + isAlive);
 	}	
 
   public InetAddress getInetAddress(){
@@ -78,5 +83,17 @@ public abstract class GameObject {
 
   public void setScore(int s) {
     this.score += s;
+  }
+
+  public int getScore() {
+    return this.score;
+  }
+
+  public void isDead() {
+    this.isAlive = false;
+  }
+
+  public Boolean isAlive() {
+    return this.isAlive;
   }
 }
