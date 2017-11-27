@@ -13,13 +13,16 @@ public abstract class GameObject {
   public String objectName;
   public float velX = 0, velY = 0;
   public Color playerColor;
+  public String objectType;
+  private Boolean isAlive = true;
 
-  public GameObject(float x, float y, String name, InetAddress inetAddress, int portNumber) {
+  public GameObject(float x, float y, String name, InetAddress inetAddress, int portNumber, String objectType) {
     this.x = x;
     this.y = y;
     this.objectName = name; 
     this.inetAddress = inetAddress;
     this.portNumber = portNumber;
+    this.objectType = objectType;
     this.playerColor = new Color((int)(Math.random() * 0x1000000));
   }
 
@@ -57,6 +60,10 @@ public abstract class GameObject {
       return this.objectName;
   }
 
+  public String getType() {
+      return this.objectType;
+  }
+
   public String playerToString(){ /*** String representation. used for transfer over the network */
 		return ("PLAYER " + objectName + " " + x + " " + y + " " + Integer.toString(playerColor.getRGB()));
 	}	
@@ -68,4 +75,12 @@ public abstract class GameObject {
 	public int getPortNumber(){
 		return portNumber;
 	}
+
+  public void nowDead() {
+    this.isAlive = false;
+  }
+
+  public Boolean isAlive() {
+    return isAlive;
+  }
 }

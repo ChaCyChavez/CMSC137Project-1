@@ -10,7 +10,7 @@ public class Block extends GameObject {
   private float width, height;
 
   public Block(float x, float y, float width, float height) {
-    super(x, y, "block", null, 0);
+    super(x, y, "block", null, 0, "block");
     this.width = width;
     this.height = height;
   }
