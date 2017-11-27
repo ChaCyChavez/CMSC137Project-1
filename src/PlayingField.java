@@ -43,10 +43,10 @@ public class PlayingField extends Canvas implements Runnable {
   }
 
   private void init() {
-    this.objects.add(new Block(5, 0, 1014, 5));
-    this.objects.add(new Block(1014, 5, 5, 610));
-    this.objects.add(new Block(0, 610, 1014, 5));
-    this.objects.add(new Block(0, 0, 5, 610));
+    this.objects.add(new Block(70, 60, 879, 5));
+    this.objects.add(new Block(944, 65, 5, 490));
+    this.objects.add(new Block(65, 550, 879, 5));
+    this.objects.add(new Block(65, 60, 5, 490));
   }
 
   public synchronized void start() {

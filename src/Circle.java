@@ -56,34 +56,48 @@ public class Circle extends GameObject {
   public void collision(LinkedList<GameObject> objects){
     for(int i = 0; i < objects.size(); i++) {
       GameObject tempObject = objects.get(i);
-      //check if other players
-      //name can be used for identity
+
+      
       if(tempObject.getType().equals("block")) {
         if(getBounds().intersects(tempObject.getBounds())) {
-          setY(tempObject.getY() - height);
-          setVelY(0);
+          objects.remove(this);
         }
 
         if(getBoundsTop().intersects(tempObject.getBounds())) {
-          setY(tempObject.getY() + 5);
-          setVelY(0);
-        }
+          objects.remove(this);
+        } 
 
         if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          setX(tempObject.getX() + 5);
-          setVelX(0);
+          objects.remove(this);
         }
 
         if(getBoundsRight().intersects(tempObject.getBounds())) {
-          setX(tempObject.getX() - width);
-          setVelX(0);
+          objects.remove(this);
         }
-      } else if(tempObject.getName().startsWith("food")) {
-        if(getBounds().intersects(tempObject.getBounds()) ||
-          getBoundsTop().intersects(tempObject.getBounds()) ||
-          getBoundsLeft().intersects(tempObject.getBounds()) ||
-          getBoundsRight().intersects(tempObject.getBounds())
-        ) {
+      }
+      else if(tempObject.getName().startsWith("food")) {
+        if(getBounds().intersects(tempObject.getBounds())) {
+          setScore(getScore() + 5);
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsTop().intersects(tempObject.getBounds())) {
+          setScore(getScore() + 5);
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          setScore(getScore() + 5);
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsRight().intersects(tempObject.getBounds())) {
           setScore(getScore() + 5);
           width += 2;
           height += 2;
@@ -98,7 +112,8 @@ public class Circle extends GameObject {
           objects.remove(this);
           objects.remove(tempObject);
         }
-      } else if(tempObject.getType().equals("circle")) { //collided with other players
+      } 
+      else if(tempObject.getType().equals("circle")) { //collided with other players
         Circle temp = (Circle) tempObject;
         if(getBounds().intersects(tempObject.getBounds()) ||
           getBoundsTop().intersects(tempObject.getBounds()) ||
