@@ -2,17 +2,24 @@ import java.net.DatagramSocket;
 import java.net.DatagramPacket;
 
 import java.util.Iterator;
+import java.util.Random;
+import java.util.ArrayList;
 
 public class UDPServer implements Runnable {
     String playerData;
-    int connectedPlayers = 0;
     DatagramSocket serverDatagramSocket = null;
     GameState gameState;
+    Thread thread = new Thread(this);
+    int connectedPlayers = 0;
     int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
     int playerLimit;
-    Thread thread = new Thread(this);
+    
+    Random rand;
 
     String players = "PLAYER_LIST ";
+
+    ArrayList<Food> foods = new ArrayList<Food>();
+    ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 
     public UDPServer (int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
@@ -24,7 +31,24 @@ public class UDPServer implements Runnable {
             e.printStackTrace();
         }
         gameState = new GameState();
+
+        generateFoodBomb();
         thread.start();
+    }
+
+    public void generateFoodBomb() {
+        rand = new Random();
+
+        for(int i = 0; i < 10; i++) {
+            int fx = Math.abs(rand.nextInt() % 1000) + 5;
+            int fy = Math.abs(rand.nextInt() % 600) + 5;
+
+            int bx = Math.abs(rand.nextInt() % 1000) + 5;
+            int by = Math.abs(rand.nextInt() % 600) + 5;
+
+            foods.add(new Food(fx, fy));
+            bombs.add(new Bomb(bx, by));
+        }
     }
 
     public void broadcast(String message) { //broadcast data to all players
@@ -48,7 +72,7 @@ public class UDPServer implements Runnable {
 
     public void run() {
         while(true) {
-            byte[] buffer = new byte[256];
+            byte[] buffer = new byte[2048];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length); // packet for receiving packets with lengthf buffer
             try {
                 serverDatagramSocket.receive(packet);
@@ -71,7 +95,7 @@ public class UDPServer implements Runnable {
                             gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                             System.out.println("Player connected: " + playerDataTokens[1]);                        
                             broadcast("CONNECTED " + playerDataTokens[1]);
-                            players += playerDataTokens[1] + " ";
+                            players += playerDataTokens[1] + ":" + "50:50 ";
                             connectedPlayers++;
                             if (connectedPlayers == playerLimit){
                                 stage = 0; //public static final int GAME_START=0;
@@ -81,11 +105,23 @@ public class UDPServer implements Runnable {
                     break;
                 case 0: //GAME_START
                     System.out.println("Game State: START");
+                    for(int i = 0; i < foods.size(); i++) {
+                        players += foods.get(i).getName() +
+                                    ":" + foods.get(i).getX() + ":" +
+                                    foods.get(i).getY() + " ";
+
+                        players += bombs.get(i).getName() +
+                                    ":" + bombs.get(i).getX() + ":" +
+                                    bombs.get(i).getY() + " ";
+                    }
+
+                    System.out.println(players);
                     broadcast(players);
                     stage = 1; //IN_PROGRESS
                     break;
                 case 1: //IN_PROGRESS
                     if (playerData.startsWith("PLAYER")){
+                        System.out.println(playerData);
                         String[] playerPosition = playerData.split(" ");	 //Tokenize:				  
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
                         float xPosition = Float.parseFloat(playerPosition[2].trim());

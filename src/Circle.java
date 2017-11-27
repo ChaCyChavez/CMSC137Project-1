@@ -71,6 +71,49 @@ public class Circle extends GameObject {
           x = tempObject.getX() - width;
           velX = 0;
         }
+      } else if(tempObject.getName().startsWith("food")) {
+        if(getBounds().intersects(tempObject.getBounds())) {
+          
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsTop().intersects(tempObject.getBounds())) {
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          width += 2;
+          height += 2;
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsRight().intersects(tempObject.getBounds())) {
+          objects.remove(tempObject);
+        }
+      } else if(tempObject.getName().startsWith("bomb")) {
+        if(getBounds().intersects(tempObject.getBounds())) {
+          objects.remove(this);
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsTop().intersects(tempObject.getBounds())) {
+          objects.remove(this);
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsLeft().intersects(tempObject.getBounds())) {
+
+          objects.remove(this);
+          objects.remove(tempObject);
+        }
+
+        if(getBoundsRight().intersects(tempObject.getBounds())) {
+          objects.remove(this);
+          objects.remove(tempObject);
       } else if(tempObject.getType().equals("circle")) { //collided with other players
         Circle temp = (Circle) tempObject;
         if(getBounds().intersects(tempObject.getBounds()) && 
@@ -87,6 +130,7 @@ public class Circle extends GameObject {
       }
     }
   }
+}
 
   public void render(Graphics g) {
     if(this.isAlive()) {

@@ -83,7 +83,7 @@ public class PlayingField extends Canvas implements Runnable {
       //   Thread.sleep(1);
       // }catch(Exception ioe){}
             
-      byte[] buf = new byte[256]; //Get the data from players
+      byte[] buf = new byte[2048]; //Get the data from players
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try{
         socket.receive(packet);
@@ -112,6 +112,7 @@ public class PlayingField extends Canvas implements Runnable {
         
         if (dataFromServer.startsWith("PLAYER")){
           String[] playersInfo = dataFromServer.split(":");
+
 					for (int i = 0; i < playersInfo.length; i++){
 						String[] playerInfo = playersInfo[i].split(" ");
 						String pname = playerInfo[1];
@@ -147,7 +148,20 @@ public class PlayingField extends Canvas implements Runnable {
           String[] playerNames = dataFromServer.split(" ");
 					for (int i = 1; i < playerNames.length; i++){
             System.out.println("PlayingField player: " + playerNames[i]);
-            this.objects.add(new Circle(50, 50+(i*50), playerNames[i], packet.getAddress(), packet.getPort()));
+            String[] player_coord = playerNames[i].split(":");
+
+            if(!player_coord[0].startsWith("food") && !player_coord[0].startsWith("bomb")){
+              this.objects.add(new Circle(Float.parseFloat(player_coord[1]),
+                                            Float.parseFloat(player_coord[2]),
+                                            player_coord[0], packet.getAddress(),
+                                            packet.getPort()));
+            } else if(!player_coord[0].startsWith("bomb")) {
+              this.objects.add(new Food(Float.parseFloat(player_coord[1]),
+                                          Float.parseFloat(player_coord[2])));
+            } else {
+              this.objects.add(new Bomb(Float.parseFloat(player_coord[1]),
+                                          Float.parseFloat(player_coord[2])));
+            }
           }
           completedPlayers = true;
           this.addKeyListener(new KeyInput(objects, playerName));
