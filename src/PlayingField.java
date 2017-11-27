@@ -147,7 +147,6 @@ public class PlayingField extends Canvas implements Runnable {
         if (dataFromServer.startsWith("PLAYER_LIST")) {
           String[] playerNames = dataFromServer.split(" ");
 					for (int i = 1; i < playerNames.length; i++){
-            System.out.println("PlayingField player: " + playerNames[i]);
             String[] player_coord = playerNames[i].split(":");
 
             if(!player_coord[0].startsWith("food") && !player_coord[0].startsWith("bomb")){

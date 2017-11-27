@@ -126,9 +126,11 @@ public class UDPServer implements Runnable {
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
                         float xPosition = Float.parseFloat(playerPosition[2].trim());
                         float yPosition = Float.parseFloat(playerPosition[3].trim());
+                        int score = Integer.parseInt(playerPosition[4].trim());
                         GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);	//Get the player from the game state				  
                         player.setX(xPosition);
                         player.setY(yPosition);
+                        player.setScore(score);
                         gameState.update(playerName, player); //Update current player in hashmap of players
                         broadcast(gameState.gameToString()); //Send to all the updated game state
 					}
