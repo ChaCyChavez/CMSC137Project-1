@@ -10,7 +10,7 @@ public class Food extends GameObject {
   private float width, height;
 
   public Food(float x, float y) {
-    super(x, y, "food" + x + "" + y, null, 0);
+    super(x, y, "food", null, 0, "food");
     this.width = 10;
     this.height = 10;
   }

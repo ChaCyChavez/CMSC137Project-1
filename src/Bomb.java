@@ -10,7 +10,7 @@ public class Bomb extends GameObject {
   private float width, height;
 
   public Bomb(float x, float y) {
-    super(x, y, "bomb" + x + "" + y, null, 0);
+    super(x, y, "bomb", null, 0, "food");
     this.width = 10;
     this.height = 10;
   }

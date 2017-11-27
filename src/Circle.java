@@ -17,7 +17,7 @@ public class Circle extends GameObject {
   private float prevY;
 
   public Circle(float x, float y, String name, InetAddress inetAddress, int portNumber) {
-    super(x, y, name, inetAddress, portNumber);
+    super(x, y, name, inetAddress, portNumber, "circle");
     try {
       socket = new DatagramSocket();      
     } catch (Exception e) {
@@ -51,9 +51,8 @@ public class Circle extends GameObject {
       GameObject tempObject = objects.get(i);
       //check if other players
       //name can be used for identity
-      if(tempObject.getName().equals("block")) {
+      if(tempObject.getType().equals("block")) {
         if(getBounds().intersects(tempObject.getBounds())) {
-          
           y = tempObject.getY() - height;
           velY = 0;
         }
@@ -98,37 +97,54 @@ public class Circle extends GameObject {
       } else if(tempObject.getName().startsWith("bomb")) {
         if(getBounds().intersects(tempObject.getBounds())) {
           objects.remove(this);
+          objects.remove(tempObject);
         }
 
         if(getBoundsTop().intersects(tempObject.getBounds())) {
           objects.remove(this);
+          objects.remove(tempObject);
         }
 
         if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          width += 2;
-          height += 2;
+
           objects.remove(this);
+          objects.remove(tempObject);
         }
 
         if(getBoundsRight().intersects(tempObject.getBounds())) {
-          width += 2;
-          height += 2;
           objects.remove(this);
+          objects.remove(tempObject);
+      } else if(tempObject.getType().equals("circle")) { //collided with other players
+        Circle temp = (Circle) tempObject;
+        if(getBounds().intersects(tempObject.getBounds()) && 
+          !tempObject.getName().equals(objectName) &&
+          isAlive() && tempObject.isAlive() &&
+          temp.getWidth() < getWidth()) {
+            System.out.println("width" + width + "height" + height);
+            System.out.println("width" + temp.getWidth() + "height" + temp.getHeight());
+            width += temp.getWidth()/2;
+            height += temp.getHeight()/2;
+            tempObject.nowDead();
         }
       }
     }
   }
+}
 
   public void render(Graphics g) {
-    g.setColor(playerColor);
-    g.fillOval((int)x, (int)y, (int)width, (int)height);
+    if(this.isAlive()) {
+      g.setColor(playerColor);
+      g.fillOval((int)x, (int)y, (int)width, (int)height);
 
-    Graphics2D g2d = (Graphics2D) g;
-    g.setColor(Color.yellow);
-    g2d.draw(getBounds());
-    g2d.draw(getBoundsRight());
-    g2d.draw(getBoundsLeft());
-    g2d.draw(getBoundsTop());
+      Graphics2D g2d = (Graphics2D) g;
+      g.setColor(Color.white);
+      g2d.drawString(this.objectName, (int)(x+(width/2)), (int)(y+height));
+      g.setColor(Color.yellow);
+      g2d.draw(getBounds());
+      g2d.draw(getBoundsRight());
+      g2d.draw(getBoundsLeft());
+      g2d.draw(getBoundsTop());
+    }
   }
 
   public Rectangle getBounds() {
@@ -142,5 +158,13 @@ public class Circle extends GameObject {
   }
   public Rectangle getBoundsLeft() {
     return new Rectangle((int)x, (int)y, (int)5, (int)height);
+  }
+
+  public float getHeight() {
+    return this.height;
+  }
+
+  public float getWidth() {
+    return this.width;
   }
 }

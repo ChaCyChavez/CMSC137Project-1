@@ -43,18 +43,10 @@ public class PlayingField extends Canvas implements Runnable {
   }
 
   private void init() {
-
-		// this.objects.add(new Circle(50, 50, playerName));
-
-    // this.objects.add(new Block(100, 100, 50, 50));
-
     this.objects.add(new Block(5, 0, 1014, 5));
     this.objects.add(new Block(1014, 5, 5, 610));
     this.objects.add(new Block(0, 610, 1014, 5));
     this.objects.add(new Block(0, 0, 5, 610));
-
-    //add objects or players here
-
   }
 
   public synchronized void start() {
