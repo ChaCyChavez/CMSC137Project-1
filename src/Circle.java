@@ -49,29 +49,26 @@ public class Circle extends GameObject {
   public void collision(LinkedList<GameObject> objects){
     for(int i = 0; i < objects.size(); i++) {
       GameObject tempObject = objects.get(i);
-      //check if other players
-      //name can be used for identity
+
+      
       if(tempObject.getType().equals("block")) {
         if(getBounds().intersects(tempObject.getBounds())) {
-          y = tempObject.getY() - height;
-          velY = 0;
+          objects.remove(this);
         }
 
         if(getBoundsTop().intersects(tempObject.getBounds())) {
-          y = tempObject.getY() + 5;
-          velY = 0;
-        }
+          objects.remove(this);
+        } 
 
         if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          x = tempObject.getX() + 5;
-          velX = 0;
+          objects.remove(this);
         }
 
         if(getBoundsRight().intersects(tempObject.getBounds())) {
-          x = tempObject.getX() - width;
-          velX = 0;
+          objects.remove(this);
         }
-      } else if(tempObject.getName().startsWith("food")) {
+      }
+      else if(tempObject.getName().startsWith("food")) {
         if(getBounds().intersects(tempObject.getBounds())) {
           score += 5;
           width += 2;
@@ -99,7 +96,9 @@ public class Circle extends GameObject {
           height += 2;
           objects.remove(tempObject);
         }
-      } else if(tempObject.getName().startsWith("bomb")) {
+      } 
+
+      else if(tempObject.getName().startsWith("bomb")) {
         if(getBounds().intersects(tempObject.getBounds())) {
           objects.remove(this);
           objects.remove(tempObject);
@@ -119,7 +118,8 @@ public class Circle extends GameObject {
           objects.remove(this);
           objects.remove(tempObject);
         }
-      } else if(tempObject.getType().equals("circle")) { //collided with other players
+      } 
+      else if(tempObject.getType().equals("circle")) { //collided with other players
         Circle temp = (Circle) tempObject;
         if(getBounds().intersects(tempObject.getBounds())) {
           if(temp.getWidth() < this.getWidth()) {
@@ -147,7 +147,6 @@ public class Circle extends GameObject {
             objects.remove(tempObject);
           }
         }
-
         if(getBoundsRight().intersects(tempObject.getBounds())) {
           if(temp.getWidth() < this.getWidth()) {
             width += temp.getWidth()/2;

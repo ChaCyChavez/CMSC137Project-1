@@ -8,6 +8,7 @@ import java.util.LinkedList;
 public class Block extends GameObject {
 
   private float width, height;
+  private boolean canBlock;
 
   public Block(float x, float y, float width, float height) {
     super(x, y, "block", null, 0, "block");
@@ -20,6 +21,10 @@ public class Block extends GameObject {
     y += velY;
 
     collision(objects);
+  }
+
+  public boolean canBlock() {
+    return this.canBlock;
   }
 
   public void collision(LinkedList<GameObject> objects){

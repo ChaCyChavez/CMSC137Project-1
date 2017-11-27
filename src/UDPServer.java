@@ -40,11 +40,11 @@ public class UDPServer implements Runnable {
         rand = new Random();
 
         for(int i = 0; i < 10; i++) {
-            int fx = Math.abs(rand.nextInt() % 1000) + 5;
-            int fy = Math.abs(rand.nextInt() % 600) + 5;
+            int fx = Math.abs(rand.nextInt() % 875) + 65;
+            int fy = Math.abs(rand.nextInt() % 490) + 65;
 
-            int bx = Math.abs(rand.nextInt() % 1000) + 5;
-            int by = Math.abs(rand.nextInt() % 600) + 5;
+            int bx = Math.abs(rand.nextInt() % 875) + 65;
+            int by = Math.abs(rand.nextInt() % 490) + 65;
 
             foods.add(new Food(fx, fy));
             bombs.add(new Bomb(bx, by));
@@ -95,7 +95,7 @@ public class UDPServer implements Runnable {
                             gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                             System.out.println("Player connected: " + playerDataTokens[1]);                        
                             broadcast("CONNECTED " + playerDataTokens[1]);
-                            players += playerDataTokens[1] + ":" + "50:50 ";
+                            players += playerDataTokens[1] + ":" + "100:100 ";
                             connectedPlayers++;
                             if (connectedPlayers == playerLimit){
                                 stage = 0; //public static final int GAME_START=0;
