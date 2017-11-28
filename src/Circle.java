@@ -75,8 +75,7 @@ public class Circle extends GameObject {
           getBoundsLeft().intersects(tempObject.getBounds()) ||
           getBoundsRight().intersects(tempObject.getBounds())
         ) {
-          int s = getScore();
-          setScore(s + 5);
+          setScore(5);
           width += 2;
           height += 2;
           send(this);
@@ -104,8 +103,7 @@ public class Circle extends GameObject {
           if(temp.getWidth() < this.getWidth()) {
             width += temp.getWidth()/4;
             height += temp.getHeight()/4;
-            int s = getScore();
-            setScore(s + 15);
+            setScore(15);
             temp.isDead();
             send(temp);
             objects.remove(tempObject);
