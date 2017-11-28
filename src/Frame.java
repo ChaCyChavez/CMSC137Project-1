@@ -17,9 +17,14 @@ public class Frame extends JFrame {
 	private static final String INSTRUCTION = "INSTRUCTION";
 	private static final String MENU = "MENU";
 
-	public Frame() {
+	private String server;
+	private int portNumber;
+
+	public Frame(String server, int portNumber) {
 		super("Knock Out v.0.2");
-		this.setPreferredSize(new Dimension(800, 600));
+		this.server = server;
+		this.portNumber = portNumber;
+		this.setPreferredSize(new Dimension(1280, 720));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setContentPane(createMainPanel());
 		this.pack();
@@ -32,19 +37,25 @@ public class Frame extends JFrame {
 		mainPanel = new JPanel(cardLayout);
 
 		menuPanel = new MenuPanel();
-		gamePanel = new GamePanel();
 		instructionPanel = new InstructionPanel();
 
 		mainPanel.add(menuPanel, MENU);
-		mainPanel.add(gamePanel, GAME);
 		mainPanel.add(instructionPanel, INSTRUCTION);
 
 		menuPanel.getStartButton().addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent ae) { 
 				if(!menuPanel.getNameField().equals("")) { //create client only if name is not empty
+					gamePanel = new GamePanel(menuPanel.getNameField());
+					Client client = new Client(menuPanel.getNameField(), server, portNumber, gamePanel); //create and start a new client
+					mainPanel.add(gamePanel, GAME);
+					gamePanel.getBackButton().addActionListener(new ActionListener () {
+						@Override
+						public void actionPerformed(ActionEvent ae) {
+							cardLayout.show(mainPanel, MENU);
+						}
+					});	
 					cardLayout.show(mainPanel, GAME);
-					Client client = new Client(menuPanel.getNameField(), "localhost", 4444, gamePanel); //create and start a new client
 					new Thread(new Runnable() { //run new thread so gui wont freeze
 						@Override
 						public void run() {
@@ -67,14 +78,7 @@ public class Frame extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				System.exit(0);
 			}
-		});
-
-		gamePanel.getBackButton().addActionListener(new ActionListener () {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				cardLayout.show(mainPanel, MENU);
-			}
-		});		
+		});	
 
 		instructionPanel.getBackButton().addActionListener(new ActionListener () {
 			@Override

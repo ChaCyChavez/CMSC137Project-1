@@ -4,8 +4,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
-    private static final int portNumber = 4444;
-
     private int port;
     private ArrayList<ClientThread> clients;
 

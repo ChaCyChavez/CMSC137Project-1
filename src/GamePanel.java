@@ -19,6 +19,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Canvas;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -29,6 +30,11 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.File;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class GamePanel extends JPanel {
 
@@ -48,12 +54,15 @@ public class GamePanel extends JPanel {
 	private JPanel centerPanel;
 	private Font font;
 	final static boolean shouldFill = true;
-  final static boolean shouldWeightX = true;
-  final static boolean RIGHT_TO_LEFT = false;
+	final static boolean shouldWeightX = true;
+	final static boolean RIGHT_TO_LEFT = false;
 
-	public GamePanel() {
+	public String playerName;
+
+	public GamePanel(String playerName) {
 		super(new BorderLayout());
 		this.setBackground(Color.BLACK);
+		this.playerName = playerName;
 
 		try {
 		  GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -67,14 +76,14 @@ public class GamePanel extends JPanel {
 		this.add(createTopPanel(), BorderLayout.NORTH);
 		this.add(createLeftPanel(), BorderLayout.WEST);
 		this.add(createCenterPanel(), BorderLayout.CENTER);
+		playingField.start();
 	}
 
-	public JPanel createCenterPanel() {
-		playingField = new PlayingField();
+	public Canvas createCenterPanel() {
+		playingField = new PlayingField(playerName);
 
 		return playingField;
 	}
-
 
 	public JPanel createTopPanel() {
 		topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -103,7 +112,7 @@ public class GamePanel extends JPanel {
 
 		gbc = new GridBagConstraints();
 
-		leftPanel.setPreferredSize(new Dimension(300, 600));
+		leftPanel.setPreferredSize(new Dimension(250, 600));
 
 		font = font.deriveFont(Font.PLAIN, 20);
 		conversation = new JTextPane();
