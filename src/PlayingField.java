@@ -153,13 +153,18 @@ public class PlayingField extends Canvas implements Runnable {
 					for (int i = 1; i < playerNames.length; i++){
             String[] player_coord = playerNames[i].split(":");
 
-            if(!player_coord[0].startsWith("food") && !player_coord[0].startsWith("bomb")){
+            if(!player_coord[0].startsWith("food") &&
+                !player_coord[0].startsWith("powerup") && 
+                !player_coord[0].startsWith("bomb")){
               this.objects.add(new Circle(Float.parseFloat(player_coord[1]),
                                             Float.parseFloat(player_coord[2]),
                                             player_coord[0], packet.getAddress(),
                                             packet.getPort()));
-            } else if(!player_coord[0].startsWith("bomb")) {
+            } else if(player_coord[0].startsWith("food")) {
               this.objects.add(new Food(Float.parseFloat(player_coord[1]),
+                                          Float.parseFloat(player_coord[2])));
+            } else if(player_coord[0].startsWith("powerup")) {
+              this.objects.add(new PowerUp(Float.parseFloat(player_coord[1]),
                                           Float.parseFloat(player_coord[2])));
             } else {
               this.objects.add(new Bomb(Float.parseFloat(player_coord[1]),

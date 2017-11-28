@@ -48,6 +48,8 @@ public class UDPServer implements Runnable {
             foods.add(new Food(fx, fy));
             bombs.add(new Bomb(bx, by));
         }
+
+
     }
 
     public void broadcast(String message) { //broadcast data to all players
@@ -114,7 +116,11 @@ public class UDPServer implements Runnable {
                                     bombs.get(i).getY() + " ";
                     }
 
-                    System.out.println(players);
+                    int x = Math.abs(rand.nextInt() % 875) + 65;
+                    int y = Math.abs(rand.nextInt() % 490) + 65;
+
+                    players += "powerup:" + x + ":" + y;
+
                     broadcast(players);
                     stage = 1; //IN_PROGRESS
                     break;
