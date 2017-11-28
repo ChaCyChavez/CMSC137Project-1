@@ -17,8 +17,6 @@ public class Block extends GameObject {
   }
 
   public void tick(LinkedList<GameObject> objects) {
-    //x += velX;
-    //y += velY;
     setX(getX()+getVelX());
     setY(getY()+getVelY());
 

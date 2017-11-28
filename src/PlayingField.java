@@ -71,6 +71,9 @@ public class PlayingField extends Canvas implements Runnable {
     init();
     this.requestFocus();
 
+    long start = System.currentTimeMillis();
+    long end = start + 60*1000; // 60 seconds * 1000 ms/sec
+
     long lastTime = System.nanoTime();
     double amountOfTicks = 60.0;
     double ns = 1000000000 / amountOfTicks;
@@ -78,11 +81,7 @@ public class PlayingField extends Canvas implements Runnable {
     long timer = System.currentTimeMillis();
     int updates = 0;
     int frames = 0;
-    while(true) {
-      // try{
-      //   Thread.sleep(1);
-      // }catch(Exception ioe){}
-            
+    while(System.currentTimeMillis() < end && running) {
       byte[] buf = new byte[2048]; //Get the data from players
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try{
@@ -100,7 +99,10 @@ public class PlayingField extends Canvas implements Runnable {
 			} else if (!isConnected){
 				System.out.println("Connecting..");				
 				sendMessage("CONNECT " + playerName);
-			} else if (isConnected && completedPlayers){      
+			} else if(isConnected && dataFromServer.startsWith("END")) {
+        running = false;
+        System.out.println("GAME OVER");
+      } else if (isConnected && completedPlayers){      
         long now = System.nanoTime();
         delta += (now - lastTime) / ns;
         lastTime = now;

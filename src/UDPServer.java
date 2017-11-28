@@ -13,10 +13,9 @@ public class UDPServer implements Runnable {
     int connectedPlayers = 0;
     int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
     int playerLimit;
-    
     Random rand;
-
     String players = "PLAYER_LIST ";
+    Boolean running = true;
 
     ArrayList<Food> foods = new ArrayList<Food>();
     ArrayList<Bomb> bombs = new ArrayList<Bomb>();
@@ -71,7 +70,7 @@ public class UDPServer implements Runnable {
     }
 
     public void run() {
-        while(true) {
+        while(running) {
             byte[] buffer = new byte[2048];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length); // packet for receiving packets with lengthf buffer
             try {
@@ -147,7 +146,11 @@ public class UDPServer implements Runnable {
                     remaining += 1;
                 }
             }
-            System.out.println("Remaining" + remaining);
+            if(remaining == 1 && stage == 1) {
+                System.out.println("One player left!");
+                running = false;
+                broadcast("END");
+            }
         }
     }
 }

@@ -10,14 +10,12 @@ public class Bomb extends GameObject {
   private float width, height;
 
   public Bomb(float x, float y) {
-    super(x, y, "bomb", null, 0, "food");
+    super(x, y, "bomb", null, 0, "bomb");
     this.width = 10;
     this.height = 10;
   }
 
   public void tick(LinkedList<GameObject> objects) {
-    //x += velX;
-    //y += velY;
     setX(getX()+getVelX());
     setY(getY()+getVelY());
 

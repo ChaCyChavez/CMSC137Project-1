@@ -24,30 +24,32 @@ public class Circle extends GameObject {
     }
   }
 
+  private void send(Circle tempObject) {
+    String message = "PLAYER " + 
+                    tempObject.getName() + " " + 
+                    tempObject.getX() + " " + 
+                    tempObject.getY() + " " + 
+                    tempObject.getScore() + " " +
+                    tempObject.isAlive();
+
+    try {
+      byte[] buffer = message.getBytes();
+      InetAddress address = InetAddress.getByName("localhost");
+      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
+      socket.send(packet);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   public void tick(LinkedList<GameObject> objects) {
     prevX = getX(); 
     prevY = getY();
-    //x += velX;
-    //y += velY;
     setX(getX()+getVelX());
     setY(getY()+getVelY());
 
     if (prevX != getX() || prevY != getY()){
-      String message = "PLAYER " + 
-                        getName() + " " + 
-                        getX() + " " + 
-                        getY() + " " + 
-                        getScore() + " " +
-                        isAlive();
-
-      try {
-        byte[] buffer = message.getBytes();
-        InetAddress address = InetAddress.getByName("localhost");
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
-        socket.send(packet);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      send(this);
     }
 
     collision(objects);
@@ -56,59 +58,38 @@ public class Circle extends GameObject {
   public void collision(LinkedList<GameObject> objects){
     for(int i = 0; i < objects.size(); i++) {
       GameObject tempObject = objects.get(i);
-
       
       if(tempObject.getType().equals("block")) {
-        if(getBounds().intersects(tempObject.getBounds())) {
-          objects.remove(this);
-        }
-
-        if(getBoundsTop().intersects(tempObject.getBounds())) {
-          objects.remove(this);
-        } 
-
-        if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          objects.remove(this);
-        }
-
-        if(getBoundsRight().intersects(tempObject.getBounds())) {
-          objects.remove(this);
-        }
-      }
-      else if(tempObject.getName().startsWith("food")) {
-        if(getBounds().intersects(tempObject.getBounds())) {
-          setScore(getScore() + 5);
-          width += 2;
-          height += 2;
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsTop().intersects(tempObject.getBounds())) {
-          setScore(getScore() + 5);
-          width += 2;
-          height += 2;
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsLeft().intersects(tempObject.getBounds())) {
-          setScore(getScore() + 5);
-          width += 2;
-          height += 2;
-          objects.remove(tempObject);
-        }
-
-        if(getBoundsRight().intersects(tempObject.getBounds())) {
-          setScore(getScore() + 5);
-          width += 2;
-          height += 2;
-          objects.remove(tempObject);
-        }
-      } else if(tempObject.getName().startsWith("bomb")) {
         if(getBounds().intersects(tempObject.getBounds()) ||
           getBoundsTop().intersects(tempObject.getBounds()) ||
           getBoundsLeft().intersects(tempObject.getBounds()) ||
           getBoundsRight().intersects(tempObject.getBounds())
         ) {
+          this.isDead();
+          send(this);
+          objects.remove(this);
+        }
+      } else if(tempObject.getType().equals("food")) {
+        if(getBounds().intersects(tempObject.getBounds()) ||
+          getBoundsTop().intersects(tempObject.getBounds()) ||
+          getBoundsLeft().intersects(tempObject.getBounds()) ||
+          getBoundsRight().intersects(tempObject.getBounds())
+        ) {
+          int s = getScore();
+          setScore(s + 5);
+          width += 2;
+          height += 2;
+          send(this);
+          objects.remove(tempObject);
+        }
+      } else if(tempObject.getType().equals("bomb")) {
+        if(getBounds().intersects(tempObject.getBounds()) ||
+          getBoundsTop().intersects(tempObject.getBounds()) ||
+          getBoundsLeft().intersects(tempObject.getBounds()) ||
+          getBoundsRight().intersects(tempObject.getBounds())
+        ) {
+          this.isDead();
+          send(this);
           objects.remove(this);
           objects.remove(tempObject);
         }
@@ -121,26 +102,12 @@ public class Circle extends GameObject {
           getBoundsRight().intersects(tempObject.getBounds())
         ) {
           if(temp.getWidth() < this.getWidth()) {
-            width += temp.getWidth()/2;
-            height += temp.getHeight()/2;
-            setScore(getScore() + 15);
-            tempObject.isDead();
-
-            String message = "PLAYER " + 
-                        tempObject.getName() + " " + 
-                        tempObject.getX() + " " + 
-                        tempObject.getY() + " " + 
-                        tempObject.getScore() + " " +
-                        tempObject.isAlive();
-
-            try {
-              byte[] buffer = message.getBytes();
-              InetAddress address = InetAddress.getByName("localhost");
-              DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
-              socket.send(packet);
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
+            width += temp.getWidth()/4;
+            height += temp.getHeight()/4;
+            int s = getScore();
+            setScore(s + 15);
+            temp.isDead();
+            send(temp);
             objects.remove(tempObject);
           }
         }
