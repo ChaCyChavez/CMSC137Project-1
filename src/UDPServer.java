@@ -77,7 +77,7 @@ public class UDPServer implements Runnable {
             try {
                 serverDatagramSocket.receive(packet);
             } catch (Exception e) {
-                e.printStackTrace();
+                // e.printStackTrace();
             }
 
             playerData = new String(buffer);
@@ -91,7 +91,7 @@ public class UDPServer implements Runnable {
                         String playerDataTokens[] = playerData.split(" "); //split playerData by space
                         System.out.println("playerDataToken[1] = " + playerDataTokens[1]);                        
                         if(!players.contains(playerDataTokens[1])) {    
-                            Circle player = new Circle(50, 50, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
+                            Circle player = new Circle(100, 100, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
                             gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                             System.out.println("Player connected: " + playerDataTokens[1]);                        
                             broadcast("CONNECTED " + playerDataTokens[1]);

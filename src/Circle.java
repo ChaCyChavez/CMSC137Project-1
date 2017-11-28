@@ -125,6 +125,22 @@ public class Circle extends GameObject {
             height += temp.getHeight()/2;
             setScore(getScore() + 15);
             tempObject.isDead();
+
+            String message = "PLAYER " + 
+                        tempObject.getName() + " " + 
+                        tempObject.getX() + " " + 
+                        tempObject.getY() + " " + 
+                        tempObject.getScore() + " " +
+                        tempObject.isAlive();
+
+            try {
+              byte[] buffer = message.getBytes();
+              InetAddress address = InetAddress.getByName("localhost");
+              DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
+              socket.send(packet);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
             objects.remove(tempObject);
           }
         }

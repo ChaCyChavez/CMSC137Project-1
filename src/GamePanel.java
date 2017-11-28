@@ -31,6 +31,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.File;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class GamePanel extends JPanel {
 
 	private JPanel topPanel;
@@ -49,8 +53,8 @@ public class GamePanel extends JPanel {
 	private JPanel centerPanel;
 	private Font font;
 	final static boolean shouldFill = true;
-  final static boolean shouldWeightX = true;
-  final static boolean RIGHT_TO_LEFT = false;
+	final static boolean shouldWeightX = true;
+	final static boolean RIGHT_TO_LEFT = false;
 
 	public String playerName;
 
@@ -71,7 +75,6 @@ public class GamePanel extends JPanel {
 		this.add(createTopPanel(), BorderLayout.NORTH);
 		this.add(createLeftPanel(), BorderLayout.WEST);
 		this.add(createCenterPanel(), BorderLayout.CENTER);
-
 		playingField.start();
 	}
 
