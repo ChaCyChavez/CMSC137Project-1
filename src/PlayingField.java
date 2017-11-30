@@ -251,7 +251,17 @@ public class PlayingField extends Canvas implements Runnable {
     Graphics2D g2d = (Graphics2D) g;
     g.setColor(Color.white);
     g2d.setFont(font);
-    if(time != null) g2d.drawString(time, 25, 25);
+    if(time != null) g2d.drawString(time, 25, 40);
+    g.setColor(Color.red);
+    g.fillOval(200, 5, 40, 40);
+    g.setColor(Color.green);
+    g.fillOval(400, 5, 40, 40);
+    g.setColor(Color.yellow);
+    g.fillOval(600, 5, 40, 40);
+    g.setColor(Color.white);
+    g2d.drawString("Bomb", 250, 40);
+    g2d.drawString("Food", 450, 40);
+    g2d.drawString("Power Up", 650, 40);
     for (GameObject obj: objects) {
       if(obj.getName().equals(this.playerName)) {
         String printScore = "Points: " + Integer.toString(obj.getScore());
@@ -308,6 +318,6 @@ public class PlayingField extends Canvas implements Runnable {
     g.drawOval(300, 300, 40, 40);
     font = font.deriveFont(Font.PLAIN, 20);
     g2d.setFont(font);
-    g2d.drawString(playerName, 350, 325);
+    g2d.drawString(playerName, 350, 328);
   }
 }
