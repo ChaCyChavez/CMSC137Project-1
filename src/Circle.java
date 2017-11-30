@@ -24,14 +24,16 @@ public class Circle extends GameObject {
     }
   }
 
-  private void send(Circle tempObject) {
-    String message = "PLAYER " + 
-                    tempObject.getName() + " " + 
-                    tempObject.getX() + " " + 
-                    tempObject.getY() + " " + 
-                    tempObject.getScore() + " " +
-                    tempObject.isAlive();
-
+  private void send(Circle tempObject, boolean sendPlayerInfo) {
+    String message = "FOOD";
+    if(sendPlayerInfo) {
+      message = "PLAYER " + 
+                tempObject.getName() + " " + 
+                tempObject.getX() + " " + 
+                tempObject.getY() + " " + 
+                tempObject.getScore() + " " +
+                tempObject.isAlive();
+    };
     try {
       byte[] buffer = message.getBytes();
       InetAddress address = InetAddress.getByName("localhost");
@@ -49,7 +51,9 @@ public class Circle extends GameObject {
     setY(getY()+getVelY());
 
     if (prevX != getX() || prevY != getY()){
-      send(this);
+      send(this, true);
+    } else {
+      send(this, false);
     }
 
     collision(objects);
@@ -66,7 +70,7 @@ public class Circle extends GameObject {
           getBoundsRight().intersects(tempObject.getBounds())
         ) {
           this.isDead();
-          send(this);
+          send(this, true);
           objects.remove(this);
         }
       } else if(tempObject.getType().equals("food")) {
@@ -78,7 +82,7 @@ public class Circle extends GameObject {
           setScore(5);
           width += 2;
           height += 2;
-          send(this);
+          send(this, true);
           objects.remove(tempObject);
         }
       } else if(tempObject.getType().equals("bomb")) {
@@ -88,7 +92,7 @@ public class Circle extends GameObject {
           getBoundsRight().intersects(tempObject.getBounds())
         ) {
           this.isDead();
-          send(this);
+          send(this, true);
           objects.remove(this);
           objects.remove(tempObject);
         }
@@ -105,7 +109,7 @@ public class Circle extends GameObject {
             height += temp.getHeight()/4;
             setScore(15);
             temp.isDead();
-            send(temp);
+            send(temp, true);
             objects.remove(tempObject);
           }
         }

@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.Random;
 
 public class PlayingField extends Canvas implements Runnable {
   private boolean running = false;
@@ -28,6 +29,7 @@ public class PlayingField extends Canvas implements Runnable {
   private boolean completedPlayers = false;
 
   private ArrayList playerCoordinates = new ArrayList();
+  private Random rand = new Random();
 
   private float prevX = 0;
   private float prevY = 0;
@@ -72,7 +74,7 @@ public class PlayingField extends Canvas implements Runnable {
     this.requestFocus();
 
     long start = System.currentTimeMillis();
-    long end = start + 60*1000; // 60 seconds * 1000 ms/sec
+    long end = start + 600*1000; // 60 seconds * 1000 ms/sec
 
     long lastTime = System.nanoTime();
     double amountOfTicks = 60.0;
@@ -111,8 +113,14 @@ public class PlayingField extends Canvas implements Runnable {
           updates++;
           delta--;
         }
-        
-        if (dataFromServer.startsWith("PLAYER")){
+
+        if(dataFromServer.startsWith("FOOD")) {
+          String[] token = dataFromServer.split(" ");
+          String[] coord = token[1].split(":");
+          if(!alreadyExist(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]))) {
+            this.objects.add(new Food(Float.parseFloat(coord[0]), Float.parseFloat(coord[1])));
+          }
+        } else if (dataFromServer.startsWith("PLAYER")){
           String[] playersInfo = dataFromServer.split(":");
 
 					for (int i = 0; i < playersInfo.length; i++){
@@ -155,11 +163,20 @@ public class PlayingField extends Canvas implements Runnable {
 
             if(!player_coord[0].startsWith("food") &&
                 !player_coord[0].startsWith("powerup") && 
-                !player_coord[0].startsWith("bomb")){
-              this.objects.add(new Circle(Float.parseFloat(player_coord[1]),
-                                            Float.parseFloat(player_coord[2]),
-                                            player_coord[0], packet.getAddress(),
-                                            packet.getPort()));
+                !player_coord[0].startsWith("bomb")) {
+
+              float x = Float.parseFloat(player_coord[1]);
+              float y = Float.parseFloat(player_coord[1]);
+              while(alreadyExist(x, y)) {
+                System.out.println("TRURE");
+                x = (float)Math.abs(rand.nextInt() % 800) + 80;
+                y = (float)Math.abs(rand.nextInt() % 425) + 80;
+                System.out.println(x + " " + y);
+              }
+
+              this.objects.add(new Circle(x, y,
+                                          player_coord[0], packet.getAddress(),
+                                          packet.getPort()));
             } else if(player_coord[0].startsWith("food")) {
               this.objects.add(new Food(Float.parseFloat(player_coord[1]),
                                           Float.parseFloat(player_coord[2])));
@@ -174,8 +191,17 @@ public class PlayingField extends Canvas implements Runnable {
           completedPlayers = true;
           this.addKeyListener(new KeyInput(objects, playerName));
         }
+      } 
+    }
+  }
+  private boolean alreadyExist(float x, float y) {
+    for(int i = 0; i < this.objects.size(); i++) {
+      GameObject tempObject = (GameObject) this.objects.get(i);
+      if(tempObject.getX() == x && tempObject.getY() == y) {
+        return true;
       }
     }
+    return false;
   }
 
   private void tick() { //adjusts the position of each object
