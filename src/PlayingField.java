@@ -22,6 +22,7 @@ public class PlayingField extends Canvas implements Runnable {
   private GameObject tempObject;
 
   private String server;
+  private int portNumber;
   private String playerName;
   private String dataFromServer;
   private DatagramSocket socket;
@@ -34,8 +35,11 @@ public class PlayingField extends Canvas implements Runnable {
   private float prevX = 0;
   private float prevY = 0;
 
-  public PlayingField(String playerName) {
+  public PlayingField(String playerName, String server, int portNumber) {
     this.playerName = playerName;
+    this.server = server;
+		this.portNumber = portNumber;
+
     try {
       socket = new DatagramSocket();
       socket.setSoTimeout(100);
@@ -62,7 +66,7 @@ public class PlayingField extends Canvas implements Runnable {
     try {
       byte[] buffer = message.getBytes();
       InetAddress address = InetAddress.getByName(server);
-      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
+      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, portNumber);
       socket.send(packet);
     } catch (Exception e) {
       e.printStackTrace();
@@ -74,7 +78,7 @@ public class PlayingField extends Canvas implements Runnable {
     this.requestFocus();
 
     long start = System.currentTimeMillis();
-    long end = start + 600*1000; // 60 seconds * 1000 ms/sec
+    long end = start + 60*1000; // 60 seconds * 1000 ms/sec
 
     long lastTime = System.nanoTime();
     double amountOfTicks = 60.0;
@@ -168,15 +172,14 @@ public class PlayingField extends Canvas implements Runnable {
               float x = Float.parseFloat(player_coord[1]);
               float y = Float.parseFloat(player_coord[1]);
               while(alreadyExist(x, y)) {
-                System.out.println("TRURE");
                 x = (float)Math.abs(rand.nextInt() % 800) + 80;
                 y = (float)Math.abs(rand.nextInt() % 425) + 80;
-                System.out.println(x + " " + y);
+                
               }
 
               this.objects.add(new Circle(x, y,
                                           player_coord[0], packet.getAddress(),
-                                          packet.getPort()));
+                                          packet.getPort(), server));
             } else if(player_coord[0].startsWith("food")) {
               this.objects.add(new Food(Float.parseFloat(player_coord[1]),
                                           Float.parseFloat(player_coord[2])));

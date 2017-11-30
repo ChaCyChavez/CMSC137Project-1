@@ -16,6 +16,7 @@ public abstract class GameObject {
   private String objectType;
   private int score = 0;
   private Boolean isAlive = true;
+  private Boolean hasPowerup = false;
 
   public GameObject(float x, float y, String name, InetAddress inetAddress, int portNumber, String objectType) {
     this.x = x;
@@ -95,5 +96,13 @@ public abstract class GameObject {
 
   public Boolean isAlive() {
     return this.isAlive;
+  }
+
+  public Boolean hasPowerup() {
+    return this.hasPowerup;
+  }
+
+  public void setPowerup(Boolean power) {
+    this.hasPowerup = power;
   }
 }

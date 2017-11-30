@@ -11,8 +11,8 @@ public class PowerUp extends GameObject {
 
   public PowerUp(float x, float y) {
     super(x, y, "powerup", null, 0, "powerup");
-    this.width = 20;
-    this.height = 20;
+    this.width = 15;
+    this.height = 15;
   }
 
   public void tick(LinkedList<GameObject> objects) {

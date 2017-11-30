@@ -6,21 +6,22 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class UDPServer implements Runnable {
-    String playerData;
-    DatagramSocket serverDatagramSocket = null;
-    GameState gameState;
-    Thread thread = new Thread(this);
-    int connectedPlayers = 0;
-    int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
-    int playerLimit;
-    Random rand;
-    String players = "PLAYER_LIST ";
-    Boolean running = true;
+    private String playerData;
+    private DatagramSocket serverDatagramSocket = null;
+    private GameState gameState;
+    private Thread thread = new Thread(this);
+    private int connectedPlayers = 0;
+    private int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
+    private int playerLimit;
+    private Random rand;
+    private String players = "PLAYER_LIST ";
+    private Boolean running = true;
+    private String server;
 
     ArrayList<Food> foods = new ArrayList<Food>();
     ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 
-    public UDPServer (int portNumber, int playerLimit) {
+    public UDPServer (String server, int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
 
         try {
@@ -96,8 +97,6 @@ public class UDPServer implements Runnable {
 
             playerData = new String(buffer);
             playerData = playerData.trim();
-            System.out.println("playerData = " + playerData);
-            System.out.println("stage = " + stage);
 
             switch(stage) {
                 case 3: //if waiting for players
@@ -105,7 +104,7 @@ public class UDPServer implements Runnable {
                         String playerDataTokens[] = playerData.split(" "); //split playerData by space
                         System.out.println("playerDataToken[1] = " + playerDataTokens[1]);                        
                         if(!players.contains(playerDataTokens[1])) {    
-                            Circle player = new Circle(100, 100, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
+                            Circle player = new Circle(100, 100, playerDataTokens[1], packet.getAddress(), packet.getPort(), server); //instantiate new player
                             gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                             System.out.println("Player connected: " + playerDataTokens[1]);                        
                             broadcast("CONNECTED " + playerDataTokens[1]);
@@ -129,8 +128,8 @@ public class UDPServer implements Runnable {
                                     bombs.get(i).getY() + " ";
                     }
 
-                    int x = Math.abs(rand.nextInt() % 860) + 80;
-                    int y = Math.abs(rand.nextInt() % 480) + 80;
+                    int x = Math.abs(rand.nextInt() % 850) + 80;
+                    int y = Math.abs(rand.nextInt() % 470) + 80;
 
                     players += "powerup:" + x + ":" + y;
 
@@ -159,8 +158,8 @@ public class UDPServer implements Runnable {
                           timer += 1000;
                           // fps = frames;
                           // ticks = updates;
-                            int fx = Math.abs(rand.nextInt() % 875) + 65;
-                            int fy = Math.abs(rand.nextInt() % 490) + 65;
+                            int fx = Math.abs(rand.nextInt() % 860) + 80;
+                            int fy = Math.abs(rand.nextInt() % 470) + 80;
 
                             Food food = new Food(fx, fy);
                             System.out.println("FOOD " + fx + ":" + fy);

@@ -11,8 +11,8 @@ public class Bomb extends GameObject {
 
   public Bomb(float x, float y) {
     super(x, y, "bomb", null, 0, "bomb");
-    this.width = 10;
-    this.height = 10;
+    this.width = 7;
+    this.height = 7;
   }
 
   public void tick(LinkedList<GameObject> objects) {
