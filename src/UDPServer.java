@@ -84,8 +84,6 @@ public class UDPServer implements Runnable {
 
             playerData = new String(buffer);
             playerData = playerData.trim();
-            System.out.println("playerData = " + playerData);
-            System.out.println("stage = " + stage);
 
             switch(stage) {
                 case 3: //if waiting for players

@@ -1,8 +1,15 @@
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.Toolkit;
+import java.awt.GraphicsEnvironment;
+import java.awt.Font;
+import java.awt.FontFormatException;
+
+import java.io.IOException;
+import java.io.File;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -14,6 +21,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 public class PlayingField extends Canvas implements Runnable {
+  private Font font;
   private boolean running = false;
   private Thread thread;
 
@@ -37,6 +45,15 @@ public class PlayingField extends Canvas implements Runnable {
     this.playerName = playerName;
     this.server = server;
 		this.portNumber = portNumber;
+
+    try {
+		  GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		  font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/FjallaOne-Regular.otf"));
+		  
+		  ge.registerFont(font);
+		} catch (IOException|FontFormatException e) {
+		  e.printStackTrace();
+		}
 
     try {
       socket = new DatagramSocket();
@@ -76,7 +93,7 @@ public class PlayingField extends Canvas implements Runnable {
     this.requestFocus();
 
     long start = System.currentTimeMillis();
-    long end = start + 60*1000; // 60 seconds * 1000 ms/sec
+    long end = start + 600*1000; // 60 seconds * 1000 ms/sec
 
     long lastTime = System.nanoTime();
     double amountOfTicks = 60.0;
@@ -106,6 +123,7 @@ public class PlayingField extends Canvas implements Runnable {
 			} else if(isConnected && dataFromServer.startsWith("END")) {
         running = false;
         System.out.println("GAME OVER");
+        printGameOver();
       } else if (isConnected && completedPlayers){      
         long now = System.nanoTime();
         delta += (now - lastTime) / ns;
@@ -214,5 +232,25 @@ public class PlayingField extends Canvas implements Runnable {
     bs.show();
     
     Toolkit.getDefaultToolkit().sync();
+  }
+
+  private void printGameOver() {
+    //print game over screen
+    BufferStrategy bs = this.getBufferStrategy();
+    if(bs == null) {
+      this.createBufferStrategy(1);
+      bs = this.getBufferStrategy();
+    }
+    Graphics g = bs.getDrawGraphics();
+    while(g == null) {
+      g = bs.getDrawGraphics();
+    }
+    g.setColor(Color.black);
+    g.fillRect(0,0, getWidth(), getHeight());
+    font = font.deriveFont(Font.PLAIN, 100);
+    Graphics2D g2d = (Graphics2D) g;
+    g.setColor(Color.white);
+    g2d.setFont(font);
+    g2d.drawString("GAME OVER", 430, 240);
   }
 }
