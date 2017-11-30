@@ -288,10 +288,14 @@ public class PlayingField extends Canvas implements Runnable {
     }
     g.setColor(Color.black);
     g.fillRect(0,0, getWidth(), getHeight());
-    font = font.deriveFont(Font.PLAIN, 55);
     Graphics2D g2d = (Graphics2D) g;
     g.setColor(Color.white);
+    font = font.deriveFont(Font.PLAIN, 55);
     g2d.setFont(font);
     g2d.drawString("Waiting for other players", 215, 240);
+    g.drawOval(300, 300, 40, 40);
+    font = font.deriveFont(Font.PLAIN, 20);
+    g2d.setFont(font);
+    g2d.drawString(playerName, 350, 325);
   }
 }
