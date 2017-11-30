@@ -195,10 +195,11 @@ public class PlayingField extends Canvas implements Runnable {
                 y = (float)Math.abs(rand.nextInt() % 425) + 80;
                 
               }
-
-              this.objects.add(new Circle(x, y,
+              GameObject newCircle = new Circle(x, y,
                                           player_coord[0], packet.getAddress(),
-                                          packet.getPort(), server));
+                                          packet.getPort(), server);
+              this.objects.add(newCircle);
+              sendMessage(newCircle.playerToString());
             } else if(player_coord[0].startsWith("food")) {
               this.objects.add(new Food(Float.parseFloat(player_coord[1]),
                                           Float.parseFloat(player_coord[2])));

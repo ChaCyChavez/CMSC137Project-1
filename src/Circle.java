@@ -152,6 +152,11 @@ public class Circle extends GameObject {
 
     font = font.deriveFont(Font.PLAIN, 17);
     Graphics2D g2d = (Graphics2D) g;
+    g.setColor(Color.yellow);
+    g2d.draw(getBounds());
+    g2d.draw(getBoundsTop());
+    g2d.draw(getBoundsLeft());
+    g2d.draw(getBoundsRight());
     g.setColor(Color.white);
     g2d.setFont(font);
     g2d.drawString(getName(), (int)(getX()+(width/3)), (int)(getY()+height));
@@ -165,10 +170,10 @@ public class Circle extends GameObject {
     return new Rectangle((int) ((int)getX() + (width/2) - ((width/2)/2)), (int)getY(), (int)width/2, (int)height/2);
   }
   public Rectangle getBoundsRight() {
-    return new Rectangle((int)((int)getX() + width - 5), (int)getY(), (int)5, (int)height);
+    return new Rectangle((int)((int)getX() + 3*(width/4)), (int)((int)getY()+(height/5)), (int)width/4, (int)((int)height-(height/3)));
   }
   public Rectangle getBoundsLeft() {
-    return new Rectangle((int)getX(), (int)getY(), (int)5, (int)height);
+    return new Rectangle((int)getX(), (int)((int)getY()+(height/5)), (int)width/4, (int)((int)height-(height/3)));
   }
 
   public float getHeight() {
