@@ -11,13 +11,15 @@ import java.util.LinkedList;
 
 public class Circle extends GameObject {
 
-  private float width = 40, height = 40;
+  private float width = 20, height = 20;
   private DatagramSocket socket;
   private float prevX;
   private float prevY;
+  private String server;
 
-  public Circle(float x, float y, String name, InetAddress inetAddress, int portNumber) {
+  public Circle(float x, float y, String name, InetAddress inetAddress, int portNumber, String server) {
     super(x, y, name, inetAddress, portNumber, "circle");
+    this.server = server;
     try {
       socket = new DatagramSocket();      
     } catch (Exception e) {
@@ -34,7 +36,7 @@ public class Circle extends GameObject {
 
     try {
       byte[] buffer = message.getBytes();
-      InetAddress address = InetAddress.getByName("localhost");
+      InetAddress address = InetAddress.getByName(server);
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
       socket.send(packet);
     } catch (Exception e) {

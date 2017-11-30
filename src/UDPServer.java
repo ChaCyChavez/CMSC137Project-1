@@ -6,21 +6,22 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class UDPServer implements Runnable {
-    String playerData;
-    DatagramSocket serverDatagramSocket = null;
-    GameState gameState;
-    Thread thread = new Thread(this);
-    int connectedPlayers = 0;
-    int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
-    int playerLimit;
-    Random rand;
-    String players = "PLAYER_LIST ";
-    Boolean running = true;
+    private String playerData;
+    private DatagramSocket serverDatagramSocket = null;
+    private GameState gameState;
+    private Thread thread = new Thread(this);
+    private int connectedPlayers = 0;
+    private int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
+    private int playerLimit;
+    private Random rand;
+    private String players = "PLAYER_LIST ";
+    private Boolean running = true;
+    private String server;
 
     ArrayList<Food> foods = new ArrayList<Food>();
     ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 
-    public UDPServer (int portNumber, int playerLimit) {
+    public UDPServer (String server, int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
 
         try {
@@ -92,7 +93,7 @@ public class UDPServer implements Runnable {
                         String playerDataTokens[] = playerData.split(" "); //split playerData by space
                         System.out.println("playerDataToken[1] = " + playerDataTokens[1]);                        
                         if(!players.contains(playerDataTokens[1])) {    
-                            Circle player = new Circle(100, 100, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
+                            Circle player = new Circle(100, 100, playerDataTokens[1], packet.getAddress(), packet.getPort(), server); //instantiate new player
                             gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                             System.out.println("Player connected: " + playerDataTokens[1]);                        
                             broadcast("CONNECTED " + playerDataTokens[1]);
