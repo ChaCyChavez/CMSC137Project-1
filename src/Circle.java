@@ -92,20 +92,30 @@ public class Circle extends GameObject {
           objects.remove(this);
           objects.remove(tempObject);
         }
-      } 
-      else if(tempObject.getType().equals("circle")) { //collided with other players
+      } else if(tempObject.getType().equals("circle")) { //collided with other players
         Circle temp = (Circle) tempObject;
         if(getBounds().intersects(tempObject.getBounds()) ||
           getBoundsTop().intersects(tempObject.getBounds()) ||
           getBoundsLeft().intersects(tempObject.getBounds()) ||
           getBoundsRight().intersects(tempObject.getBounds())
         ) {
-          if(temp.getWidth() < this.getWidth()) {
+          if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
             width += temp.getWidth()/4;
             height += temp.getHeight()/4;
             setScore(15);
             temp.isDead();
             send(temp);
+            objects.remove(tempObject);
+          }
+        }
+      } else if(tempObject.getType().equals("powerup")) {
+        if(getBounds().intersects(tempObject.getBounds()) ||
+          getBoundsTop().intersects(tempObject.getBounds()) ||
+          getBoundsLeft().intersects(tempObject.getBounds()) ||
+          getBoundsRight().intersects(tempObject.getBounds())
+        ) {
+          if(!this.hasPowerup()) {
+            this.setPowerup(!hasPowerup()); //TO DO: power up time limit
             objects.remove(tempObject);
           }
         }
@@ -120,7 +130,7 @@ public class Circle extends GameObject {
     Graphics2D g2d = (Graphics2D) g;
     g.setColor(Color.white);
     g2d.drawString(getName(), (int)(getX()+(width/2)), (int)(getY()+height));
-    g2d.drawString(Integer.toString(this.getScore()), (int)(getX()+(width/2)), (int)getY());
+    g2d.drawString(Integer.toString(this.getScore()), (int)(getX()+(width/2)), (int)(getY()+(height/2)));
     g.setColor(Color.yellow);
     g2d.draw(getBounds());
     g2d.draw(getBoundsRight());
