@@ -71,10 +71,9 @@ public class Circle extends GameObject {
 
     if (prevX != getX() || prevY != getY()){
       send(this, true);
-    } 
-    // else {
-    //   send(this, false);
-    // }
+    } else {
+      send(this, false);
+    }
 
     collision(objects);
   }
