@@ -40,11 +40,11 @@ public class UDPServer implements Runnable {
         rand = new Random();
 
         for(int i = 0; i < 10; i++) {
-            int fx = Math.abs(rand.nextInt() % 875) + 65;
-            int fy = Math.abs(rand.nextInt() % 490) + 65;
+            int fx = Math.abs(rand.nextInt() % 860) + 80;
+            int fy = Math.abs(rand.nextInt() % 480) + 80;
 
-            int bx = Math.abs(rand.nextInt() % 875) + 65;
-            int by = Math.abs(rand.nextInt() % 490) + 65;
+            int bx = Math.abs(rand.nextInt() % 860) + 80;
+            int by = Math.abs(rand.nextInt() % 480) + 80;
 
             foods.add(new Food(fx, fy));
             bombs.add(new Bomb(bx, by));
@@ -73,7 +73,20 @@ public class UDPServer implements Runnable {
     }
 
     public void run() {
+        long start = System.currentTimeMillis();
+        long end = start + 60*1000; // 60 seconds * 1000 ms/sec
+
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        long timer = System.currentTimeMillis();
+        int updates = 0;
+        int frames = 0;
+
         while(running) {
+            frames++;
+
             byte[] buffer = new byte[2048];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length); // packet for receiving packets with lengthf buffer
             try {
@@ -115,8 +128,8 @@ public class UDPServer implements Runnable {
                                     bombs.get(i).getY() + " ";
                     }
 
-                    int x = Math.abs(rand.nextInt() % 875) + 65;
-                    int y = Math.abs(rand.nextInt() % 490) + 65;
+                    int x = Math.abs(rand.nextInt() % 850) + 80;
+                    int y = Math.abs(rand.nextInt() % 470) + 80;
 
                     players += "powerup:" + x + ":" + y;
 
@@ -125,7 +138,7 @@ public class UDPServer implements Runnable {
                     break;
                 case 1: //IN_PROGRESS
                     if (playerData.startsWith("PLAYER")){
-                        System.out.println(playerData);
+
                         String[] playerPosition = playerData.split(" ");	 //Tokenize:				  
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
                         float xPosition = Float.parseFloat(playerPosition[2].trim());
@@ -138,8 +151,25 @@ public class UDPServer implements Runnable {
                         player.setScore(score);
                         if(!alive) player.isDead(); 
                         gameState.update(playerName, player); //Update current player in hashmap of players
+
                         broadcast(gameState.gameToString()); //Send to all the updated game state
-					}
+					} else if(playerData.startsWith("FOOD")) {
+                        if(System.currentTimeMillis() - timer > 1000) {
+                          timer += 1000;
+                          // fps = frames;
+                          // ticks = updates;
+                            int fx = Math.abs(rand.nextInt() % 860) + 80;
+                            int fy = Math.abs(rand.nextInt() % 470) + 80;
+
+                            Food food = new Food(fx, fy);
+                            System.out.println("FOOD " + fx + ":" + fy);
+                            broadcast("FOOD " + fx + ":" + fy);
+
+                          frames = 0;
+                          updates = 0;
+                          break;
+                        }
+                    }
 					break;
             }
 

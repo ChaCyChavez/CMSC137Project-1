@@ -11,8 +11,8 @@ public class Food extends GameObject {
 
   public Food(float x, float y) {
     super(x, y, "food", null, 0, "food");
-    this.width = 10;
-    this.height = 10;
+    this.width = 7;
+    this.height = 7;
   }
 
   public void tick(LinkedList<GameObject> objects) {
