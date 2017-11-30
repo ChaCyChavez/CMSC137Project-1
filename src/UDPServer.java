@@ -138,7 +138,6 @@ public class UDPServer implements Runnable {
                     break;
                 case 1: //IN_PROGRESS
                     if (playerData.startsWith("PLAYER")){
-
                         String[] playerPosition = playerData.split(" ");	 //Tokenize:				  
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
                         float xPosition = Float.parseFloat(playerPosition[2].trim());
@@ -151,7 +150,6 @@ public class UDPServer implements Runnable {
                         player.setScore(score);
                         if(!alive) player.isDead(); 
                         gameState.update(playerName, player); //Update current player in hashmap of players
-
                         broadcast(gameState.gameToString()); //Send to all the updated game state
 					} else if(playerData.startsWith("FOOD")) {
                         if(System.currentTimeMillis() - timer > 1000) {

@@ -2,6 +2,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.GraphicsEnvironment;
+import java.awt.Font;
+import java.awt.FontFormatException;
+
+import java.io.IOException;
+import java.io.File;
 
 import java.net.InetAddress;
 import java.net.DatagramPacket;
@@ -10,6 +16,7 @@ import java.net.DatagramSocket;
 import java.util.LinkedList;
 
 public class Circle extends GameObject {
+  private Font font;
 
   private float width = 20, height = 20;
   private DatagramSocket socket;
@@ -20,6 +27,16 @@ public class Circle extends GameObject {
   public Circle(float x, float y, String name, InetAddress inetAddress, int portNumber, String server) {
     super(x, y, name, inetAddress, portNumber, "circle");
     this.server = server;
+    
+    try {
+		  GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		  font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/OpenSans-Regular.ttf"));
+		  
+		  ge.registerFont(font);
+		} catch (IOException|FontFormatException e) {
+		  e.printStackTrace();
+		}
+    
     try {
       socket = new DatagramSocket();      
     } catch (Exception e) {
@@ -109,7 +126,8 @@ public class Circle extends GameObject {
             send(temp, true);
             objects.remove(tempObject);
           } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
-            this.setY(this.getY() + 10);
+            this.setY(this.getY() - temp.getHeight() - 50);
+            send(this, true);
           }
         } else if(getBoundsTop().intersects(tempObject.getBounds())) {
           if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
@@ -120,7 +138,8 @@ public class Circle extends GameObject {
             send(temp, true);
             objects.remove(tempObject);
           } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
-            this.setY(this.getY() -10);
+            this.setY(this.getY() + temp.getHeight() + 50);
+            send(this, true);
           }
         } else if(getBoundsLeft().intersects(tempObject.getBounds())) {
           if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
@@ -131,7 +150,8 @@ public class Circle extends GameObject {
             send(temp, true);
             objects.remove(tempObject);
           } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
-            this.setX(this.getX() - 10);
+            this.setX(this.getX() + temp.getWidth() + 50);
+            send(this, true);
           }
         } else if(getBoundsRight().intersects(tempObject.getBounds())) {
           if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
@@ -142,7 +162,8 @@ public class Circle extends GameObject {
             send(temp, true);
             objects.remove(tempObject);
           } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
-            this.setX(this.getX() + 10);
+            this.setX(this.getX() - temp.getWidth() - 50);
+            send(this, true);
           }
         }
 
@@ -168,15 +189,17 @@ public class Circle extends GameObject {
     g.setColor(getColor());
     g.fillOval((int)getX(), (int)getY(), (int)width, (int)height);
 
+    font = font.deriveFont(Font.PLAIN, 17);
     Graphics2D g2d = (Graphics2D) g;
-    g.setColor(Color.white);
-    g2d.drawString(getName(), (int)(getX()+(width/2)), (int)(getY()+height));
-    g2d.drawString(Integer.toString(this.getScore()), (int)(getX()+(width/2)), (int)(getY()+(height/2)));
     g.setColor(Color.yellow);
     g2d.draw(getBounds());
-    g2d.draw(getBoundsRight());
-    g2d.draw(getBoundsLeft());
     g2d.draw(getBoundsTop());
+    g2d.draw(getBoundsLeft());
+    g2d.draw(getBoundsRight());
+    g.setColor(Color.white);
+    g2d.setFont(font);
+    g2d.drawString(getName(), (int)(getX()+(width/3)), (int)(getY()+height));
+    g2d.drawString(Integer.toString(this.getScore()), (int)(getX()+(width/3)), (int)(getY()+(height/2)));
   }
 
   public Rectangle getBounds() {
@@ -186,10 +209,10 @@ public class Circle extends GameObject {
     return new Rectangle((int) ((int)getX() + (width/2) - ((width/2)/2)), (int)getY(), (int)width/2, (int)height/2);
   }
   public Rectangle getBoundsRight() {
-    return new Rectangle((int)((int)getX() + width - 5), (int)getY(), (int)5, (int)height);
+    return new Rectangle((int)((int)getX() + 3*(width/4)), (int)((int)getY()+(height/5)), (int)width/4, (int)((int)height-(height/3)));
   }
   public Rectangle getBoundsLeft() {
-    return new Rectangle((int)getX(), (int)getY(), (int)5, (int)height);
+    return new Rectangle((int)getX(), (int)((int)getY()+(height/5)), (int)width/4, (int)((int)height-(height/3)));
   }
 
   public float getHeight() {
