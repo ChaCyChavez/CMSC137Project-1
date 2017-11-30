@@ -46,7 +46,7 @@ public class Frame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent ae) { 
 				if(!menuPanel.getNameField().equals("")) { //create client only if name is not empty
-					gamePanel = new GamePanel(menuPanel.getNameField());
+					gamePanel = new GamePanel(menuPanel.getNameField(), server, portNumber);
 					Client client = new Client(menuPanel.getNameField(), server, portNumber, gamePanel); //create and start a new client
 					mainPanel.add(gamePanel, GAME);
 					gamePanel.getBackButton().addActionListener(new ActionListener () {

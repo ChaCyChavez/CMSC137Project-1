@@ -58,11 +58,15 @@ public class GamePanel extends JPanel {
 	final static boolean RIGHT_TO_LEFT = false;
 
 	public String playerName;
+	public String server;
+	public int portNumber;
 
-	public GamePanel(String playerName) {
+	public GamePanel(String playerName, String server, int portNumber) {
 		super(new BorderLayout());
 		this.setBackground(Color.BLACK);
 		this.playerName = playerName;
+		this.server = server;
+		this.portNumber = portNumber;
 
 		try {
 		  GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -80,7 +84,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public Canvas createCenterPanel() {
-		playingField = new PlayingField(playerName);
+		playingField = new PlayingField(playerName, server, portNumber);
 
 		return playingField;
 	}

@@ -21,6 +21,7 @@ public class PlayingField extends Canvas implements Runnable {
   private GameObject tempObject;
 
   private String server;
+  private int portNumber;
   private String playerName;
   private String dataFromServer;
   private DatagramSocket socket;
@@ -32,8 +33,11 @@ public class PlayingField extends Canvas implements Runnable {
   private float prevX = 0;
   private float prevY = 0;
 
-  public PlayingField(String playerName) {
+  public PlayingField(String playerName, String server, int portNumber) {
     this.playerName = playerName;
+    this.server = server;
+		this.portNumber = portNumber;
+
     try {
       socket = new DatagramSocket();
       socket.setSoTimeout(100);
@@ -60,7 +64,7 @@ public class PlayingField extends Canvas implements Runnable {
     try {
       byte[] buffer = message.getBytes();
       InetAddress address = InetAddress.getByName(server);
-      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
+      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, portNumber);
       socket.send(packet);
     } catch (Exception e) {
       e.printStackTrace();
