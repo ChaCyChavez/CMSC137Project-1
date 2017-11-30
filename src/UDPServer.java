@@ -17,6 +17,8 @@ public class UDPServer implements Runnable {
     private String players = "PLAYER_LIST ";
     private Boolean running = true;
     private String server;
+    private long start;
+    private long end;
 
     ArrayList<Food> foods = new ArrayList<Food>();
     ArrayList<Bomb> bombs = new ArrayList<Bomb>();
@@ -135,8 +137,12 @@ public class UDPServer implements Runnable {
 
                     broadcast(players);
                     stage = 1; //IN_PROGRESS
+                    start = System.currentTimeMillis();
+                    end = start + 600*1000; // 60 seconds * 1000 ms/sec
                     break;
                 case 1: //IN_PROGRESS
+                    start = System.currentTimeMillis();
+                    broadcast("TIME " + Long.toString(((end-start)/1000)/60) + ":" + Long.toString(((end-start)/1000)%60));
                     if (playerData.startsWith("PLAYER")){
                         String[] playerPosition = playerData.split(" ");	 //Tokenize:				  
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
@@ -167,6 +173,9 @@ public class UDPServer implements Runnable {
                           break;
                         }
                     }
+                    if(!(System.currentTimeMillis() < end)) {
+                        running = false;
+                    }
 					break;
             }
 
@@ -178,8 +187,8 @@ public class UDPServer implements Runnable {
                     remaining += 1;
                 }
             }
-            if(remaining == 1 && stage == 1) {
-                System.out.println("One player left!");
+
+            if((remaining == 1 && stage == 1) || !running) {
                 running = false;
                 broadcast("END");
             }
