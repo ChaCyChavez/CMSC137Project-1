@@ -217,6 +217,7 @@ public class PlayingField extends Canvas implements Runnable {
       } 
     }
   }
+
   private boolean alreadyExist(float x, float y) {
     for(int i = 0; i < this.objects.size(); i++) {
       GameObject tempObject = (GameObject) this.objects.get(i);
@@ -246,6 +247,16 @@ public class PlayingField extends Canvas implements Runnable {
     }
     g.setColor(Color.black);
     g.fillRect(0,0, getWidth(), getHeight());
+    font = font.deriveFont(Font.PLAIN, 30);
+    Graphics2D g2d = (Graphics2D) g;
+    g.setColor(Color.white);
+    g2d.setFont(font);
+    for (GameObject obj: objects) {
+      if(obj.getName().equals(this.playerName)) {
+        String printScore = "Points: " + Integer.toString(obj.getScore());
+        g2d.drawString(printScore, 700, 600);
+      }
+    }
     for(int i = 0; i < objects.size(); i++) {
       tempObject = objects.get(i);
       tempObject.render(g);
