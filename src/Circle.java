@@ -197,16 +197,20 @@ public class Circle extends GameObject {
   }
 
   public void render(Graphics g) {
+    if(this.hasPowerup()) {
+      g.setColor(Color.red);
+      g.drawOval((int)getX(), (int)getY(), (int)width, (int)height);
+    }
     g.setColor(getColor());
     g.fillOval((int)getX(), (int)getY(), (int)width, (int)height);
 
     font = font.deriveFont(Font.PLAIN, 17);
     Graphics2D g2d = (Graphics2D) g;
-    g.setColor(Color.yellow);
-    g2d.draw(getBounds());
-    g2d.draw(getBoundsTop());
-    g2d.draw(getBoundsLeft());
-    g2d.draw(getBoundsRight());
+    // g.setColor(Color.yellow);
+    // g2d.draw(getBounds());
+    // g2d.draw(getBoundsTop());
+    // g2d.draw(getBoundsLeft());
+    // g2d.draw(getBoundsRight());
     g.setColor(Color.white);
     g2d.setFont(font);
     g2d.drawString(getName(), (int)(getX()+(width/3)), (int)(getY()+height));
