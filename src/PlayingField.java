@@ -120,7 +120,8 @@ public class PlayingField extends Canvas implements Runnable {
 				isConnected = true;
 				System.out.println("Connected.");
 			} else if (!isConnected){
-				System.out.println("Connecting..");				
+				System.out.println("Connecting..");		
+        printWaiting();		
 				sendMessage("CONNECT " + playerName);
 			} else if(isConnected && dataFromServer.startsWith("END")) {
         running = false;
@@ -234,28 +235,22 @@ public class PlayingField extends Canvas implements Runnable {
 
   private void render() { //renders the background, renders each object
     BufferStrategy bs = this.getBufferStrategy();
-
     if(bs == null) {
       this.createBufferStrategy(1);
       bs = this.getBufferStrategy();
     }
-
     Graphics g = bs.getDrawGraphics();
     while(g == null) {
       g = bs.getDrawGraphics();
     }
-
     g.setColor(Color.black);
     g.fillRect(0,0, getWidth(), getHeight());
-
     for(int i = 0; i < objects.size(); i++) {
       tempObject = objects.get(i);
       tempObject.render(g);
     }
-
     g.dispose();
     bs.show();
-    
     Toolkit.getDefaultToolkit().sync();
   }
 
@@ -276,6 +271,26 @@ public class PlayingField extends Canvas implements Runnable {
     Graphics2D g2d = (Graphics2D) g;
     g.setColor(Color.white);
     g2d.setFont(font);
-    g2d.drawString("GAME OVER", 430, 240);
+    g2d.drawString("GAME OVER", 300, 240);
+  }
+
+  private void printWaiting() {
+    //print waiting for other players screen
+    BufferStrategy bs = this.getBufferStrategy();
+    if(bs == null) {
+      this.createBufferStrategy(1);
+      bs = this.getBufferStrategy();
+    }
+    Graphics g = bs.getDrawGraphics();
+    while(g == null) {
+      g = bs.getDrawGraphics();
+    }
+    g.setColor(Color.black);
+    g.fillRect(0,0, getWidth(), getHeight());
+    font = font.deriveFont(Font.PLAIN, 55);
+    Graphics2D g2d = (Graphics2D) g;
+    g.setColor(Color.white);
+    g2d.setFont(font);
+    g2d.drawString("Waiting for other players", 215, 240);
   }
 }
