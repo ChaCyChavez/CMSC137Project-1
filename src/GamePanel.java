@@ -60,6 +60,7 @@ public class GamePanel extends JPanel {
 	public String playerName;
 	public String server;
 	public int portNumber;
+	
 
 	public GamePanel(String playerName, String server, int portNumber) {
 		super(new BorderLayout());

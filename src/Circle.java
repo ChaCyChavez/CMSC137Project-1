@@ -167,9 +167,6 @@ public class Circle extends GameObject {
           }
         }
 
-
-
-
       } else if(tempObject.getType().equals("powerup")) {
         if(getBounds().intersects(tempObject.getBounds()) ||
           getBoundsTop().intersects(tempObject.getBounds()) ||

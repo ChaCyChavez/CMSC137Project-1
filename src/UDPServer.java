@@ -129,7 +129,7 @@ public class UDPServer implements Runnable {
                     }
 
                     int x = Math.abs(rand.nextInt() % 850) + 80;
-                    int y = Math.abs(rand.nextInt() % 470) + 80;
+                    int y = Math.abs(rand.nextInt() % 450) + 80;
 
                     players += "powerup:" + x + ":" + y;
 
@@ -154,10 +154,8 @@ public class UDPServer implements Runnable {
 					} else if(playerData.startsWith("FOOD")) {
                         if(System.currentTimeMillis() - timer > 1000) {
                           timer += 1000;
-                          // fps = frames;
-                          // ticks = updates;
                             int fx = Math.abs(rand.nextInt() % 860) + 80;
-                            int fy = Math.abs(rand.nextInt() % 470) + 80;
+                            int fy = Math.abs(rand.nextInt() % 450) + 80;
 
                             Food food = new Food(fx, fy);
                             broadcast("FOOD " + fx + ":" + fy);
