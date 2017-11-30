@@ -162,7 +162,6 @@ public class UDPServer implements Runnable {
                             int fy = Math.abs(rand.nextInt() % 470) + 80;
 
                             Food food = new Food(fx, fy);
-                            System.out.println("FOOD " + fx + ":" + fy);
                             broadcast("FOOD " + fx + ":" + fy);
 
                           frames = 0;

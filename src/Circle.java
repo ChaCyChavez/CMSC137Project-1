@@ -100,11 +100,7 @@ public class Circle extends GameObject {
         }
       } else if(tempObject.getType().equals("circle")) { //collided with other players
         Circle temp = (Circle) tempObject;
-        if(getBounds().intersects(tempObject.getBounds()) ||
-          getBoundsTop().intersects(tempObject.getBounds()) ||
-          getBoundsLeft().intersects(tempObject.getBounds()) ||
-          getBoundsRight().intersects(tempObject.getBounds())
-        ) {
+        if(getBounds().intersects(tempObject.getBounds())) {
           if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
             width += temp.getWidth()/4;
             height += temp.getHeight()/4;
@@ -112,8 +108,47 @@ public class Circle extends GameObject {
             temp.isDead();
             send(temp, true);
             objects.remove(tempObject);
+          } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
+            this.setY(this.getY() + 10);
+          }
+        } else if(getBoundsTop().intersects(tempObject.getBounds())) {
+          if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
+            width += temp.getWidth()/4;
+            height += temp.getHeight()/4;
+            setScore(15);
+            temp.isDead();
+            send(temp, true);
+            objects.remove(tempObject);
+          } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
+            this.setY(this.getY() -10);
+          }
+        } else if(getBoundsLeft().intersects(tempObject.getBounds())) {
+          if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
+            width += temp.getWidth()/4;
+            height += temp.getHeight()/4;
+            setScore(15);
+            temp.isDead();
+            send(temp, true);
+            objects.remove(tempObject);
+          } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
+            this.setX(this.getX() - 10);
+          }
+        } else if(getBoundsRight().intersects(tempObject.getBounds())) {
+          if(temp.getWidth() < this.getWidth() && !temp.hasPowerup()) {
+            width += temp.getWidth()/4;
+            height += temp.getHeight()/4;
+            setScore(15);
+            temp.isDead();
+            send(temp, true);
+            objects.remove(tempObject);
+          } else if(temp.getWidth() < this.getWidth() && temp.hasPowerup()) {
+            this.setX(this.getX() + 10);
           }
         }
+
+
+
+
       } else if(tempObject.getType().equals("powerup")) {
         if(getBounds().intersects(tempObject.getBounds()) ||
           getBoundsTop().intersects(tempObject.getBounds()) ||
