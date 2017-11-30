@@ -42,6 +42,7 @@ public class PlayingField extends Canvas implements Runnable {
 
   private float prevX = 0;
   private float prevY = 0;
+  private String time;
 
   public PlayingField(String playerName, String server, int portNumber) {
     this.playerName = playerName;
@@ -94,9 +95,6 @@ public class PlayingField extends Canvas implements Runnable {
     init();
     this.requestFocus();
 
-    long start = System.currentTimeMillis();
-    long end = start + 600*1000; // 60 seconds * 1000 ms/sec
-
     long lastTime = System.nanoTime();
     double amountOfTicks = 60.0;
     double ns = 1000000000 / amountOfTicks;
@@ -104,7 +102,7 @@ public class PlayingField extends Canvas implements Runnable {
     long timer = System.currentTimeMillis();
     int updates = 0;
     int frames = 0;
-    while(System.currentTimeMillis() < end && running) {
+    while(running) {
       byte[] buf = new byte[2048]; //Get the data from players
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try{
@@ -143,7 +141,7 @@ public class PlayingField extends Canvas implements Runnable {
           if(!alreadyExist(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]))) {
             this.objects.add(new Food(Float.parseFloat(coord[0]), Float.parseFloat(coord[1])));
           }
-        } else if (dataFromServer.startsWith("PLAYER")){
+        } else if (dataFromServer.startsWith("PLAYER")) {
           String[] playersInfo = dataFromServer.split(":");
 
 					for (int i = 0; i < playersInfo.length; i++){
@@ -165,6 +163,8 @@ public class PlayingField extends Canvas implements Runnable {
               }
             }					
 					}
+        } else if(dataFromServer.startsWith("TIME")) {
+          time = dataFromServer;
         }
 
         render(); //renders the background, renders each object
@@ -251,6 +251,17 @@ public class PlayingField extends Canvas implements Runnable {
     Graphics2D g2d = (Graphics2D) g;
     g.setColor(Color.white);
     g2d.setFont(font);
+    if(time != null) g2d.drawString(time, 25, 40);
+    g.setColor(Color.red);
+    g.fillOval(200, 5, 40, 40);
+    g.setColor(Color.green);
+    g.fillOval(400, 5, 40, 40);
+    g.setColor(Color.yellow);
+    g.fillOval(600, 5, 40, 40);
+    g.setColor(Color.white);
+    g2d.drawString("Bomb", 250, 40);
+    g2d.drawString("Food", 450, 40);
+    g2d.drawString("Power Up", 650, 40);
     for (GameObject obj: objects) {
       if(obj.getName().equals(this.playerName)) {
         String printScore = "Points: " + Integer.toString(obj.getScore());
@@ -307,6 +318,6 @@ public class PlayingField extends Canvas implements Runnable {
     g.drawOval(300, 300, 40, 40);
     font = font.deriveFont(Font.PLAIN, 20);
     g2d.setFont(font);
-    g2d.drawString(playerName, 350, 325);
+    g2d.drawString(playerName, 350, 328);
   }
 }

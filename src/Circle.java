@@ -6,6 +6,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Font;
 import java.awt.FontFormatException;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.io.IOException;
 import java.io.File;
 
@@ -14,6 +17,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import java.util.LinkedList;
+
+import javax.swing.Timer;
 
 public class Circle extends GameObject {
   private Font font;
@@ -166,7 +171,6 @@ public class Circle extends GameObject {
             send(this, true);
           }
         }
-
       } else if(tempObject.getType().equals("powerup")) {
         if(getBounds().intersects(tempObject.getBounds()) ||
           getBoundsTop().intersects(tempObject.getBounds()) ||
@@ -176,6 +180,16 @@ public class Circle extends GameObject {
           if(!this.hasPowerup()) {
             this.setPowerup(!hasPowerup()); //TO DO: power up time limit
             objects.remove(tempObject);
+            Timer timer = new Timer(10000, new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent arg0) {
+                // Code to be executed
+                setPowerup(!hasPowerup());
+                System.out.println("Powerup" + hasPowerup());
+              }
+            });
+            timer.setRepeats(false); // Only execute once
+            timer.start(); // Go go go!
           }
         }
       }
@@ -183,16 +197,20 @@ public class Circle extends GameObject {
   }
 
   public void render(Graphics g) {
+    if(this.hasPowerup()) {
+      g.setColor(Color.red);
+      g.drawOval((int)getX(), (int)getY(), (int)width, (int)height);
+    }
     g.setColor(getColor());
     g.fillOval((int)getX(), (int)getY(), (int)width, (int)height);
 
     font = font.deriveFont(Font.PLAIN, 17);
     Graphics2D g2d = (Graphics2D) g;
-    g.setColor(Color.yellow);
-    g2d.draw(getBounds());
-    g2d.draw(getBoundsTop());
-    g2d.draw(getBoundsLeft());
-    g2d.draw(getBoundsRight());
+    // g.setColor(Color.yellow);
+    // g2d.draw(getBounds());
+    // g2d.draw(getBoundsTop());
+    // g2d.draw(getBoundsLeft());
+    // g2d.draw(getBoundsRight());
     g.setColor(Color.white);
     g2d.setFont(font);
     g2d.drawString(getName(), (int)(getX()+(width/3)), (int)(getY()+height));
