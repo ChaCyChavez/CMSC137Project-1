@@ -6,6 +6,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Font;
 import java.awt.FontFormatException;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.io.IOException;
 import java.io.File;
 
@@ -14,6 +17,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import java.util.LinkedList;
+
+import javax.swing.Timer;
 
 public class Circle extends GameObject {
   private Font font;
@@ -175,6 +180,16 @@ public class Circle extends GameObject {
           if(!this.hasPowerup()) {
             this.setPowerup(!hasPowerup()); //TO DO: power up time limit
             objects.remove(tempObject);
+            Timer timer = new Timer(10000, new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent arg0) {
+                // Code to be executed
+                setPowerup(!hasPowerup());
+                System.out.println("Powerup" + hasPowerup());
+              }
+            });
+            timer.setRepeats(false); // Only execute once
+            timer.start(); // Go go go!
           }
         }
       }
