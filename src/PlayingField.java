@@ -121,7 +121,7 @@ public class PlayingField extends Canvas implements Runnable {
 				System.out.println("Connecting..");		
         printWaiting();		
 				sendMessage("CONNECT " + playerName);
-			} else if(isConnected && dataFromServer.startsWith("END")) {
+			} else if(isConnected && dataFromServer.equals("END")) {
         running = false;
         System.out.println("GAME OVER");
         printGameOver();
