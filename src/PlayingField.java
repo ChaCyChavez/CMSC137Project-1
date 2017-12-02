@@ -138,9 +138,13 @@ public class PlayingField extends Canvas implements Runnable {
         if(dataFromServer.startsWith("POWERUP")) {
           String[] token = dataFromServer.split(" ");
           String[] coord = token[1].split(":");
-          if(!alreadyExist(Float.parseFloat(coord[0]), Float.parseFloat(coord[1]))) {
-            this.objects.add(new PowerUp(Float.parseFloat(coord[0]), Float.parseFloat(coord[1])));
+          float x = Float.parseFloat(coord[0]);
+          float y = Float.parseFloat(coord[1]);
+          while(alreadyExist(x, y)) {
+            x = (float)Math.abs(rand.nextInt() % 800) + 80;
+            y = (float)Math.abs(rand.nextInt() % 425) + 80;
           }
+          this.objects.add(new PowerUp(x, y));
         } if(dataFromServer.startsWith("FOOD")) {
           String[] token = dataFromServer.split(" ");
           String[] coord = token[1].split(":");
