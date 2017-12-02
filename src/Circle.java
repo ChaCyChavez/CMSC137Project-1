@@ -95,7 +95,7 @@ public class Circle extends GameObject {
         ) {
           this.isDead();
           send(this, true);
-          objects.remove(this);
+          // objects.remove(this);
         }
       } else if(tempObject.getType().equals("food")) {
         if(getBounds().intersects(tempObject.getBounds()) ||
@@ -117,7 +117,7 @@ public class Circle extends GameObject {
         ) {
           this.isDead();
           send(this, true);
-          objects.remove(this);
+          // objects.remove(this);
           objects.remove(tempObject);
         }
       } else if(tempObject.getType().equals("circle")) { //collided with other players

@@ -270,7 +270,7 @@ public class PlayingField extends Canvas implements Runnable {
     }
     for(int i = 0; i < objects.size(); i++) {
       tempObject = objects.get(i);
-      tempObject.render(g);
+      if(tempObject.isAlive()) tempObject.render(g);
     }
     g.dispose();
     bs.show();
