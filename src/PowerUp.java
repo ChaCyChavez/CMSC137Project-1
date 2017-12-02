@@ -4,15 +4,22 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import java.util.LinkedList;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 public class PowerUp extends GameObject {
 
   private float width, height;
+  private BufferedImage power;
 
   public PowerUp(float x, float y) {
     super(x, y, "powerup", null, 0, "powerup");
     this.width = 15;
     this.height = 15;
+    try {
+      power = ImageIO.read(new File("assets/img/power.png"));
+    } catch(Exception e) {}
   }
 
   public void tick(LinkedList<GameObject> objects) {
@@ -32,10 +39,10 @@ public class PowerUp extends GameObject {
   }
 
   public void render(Graphics g) {
-    g.setColor(Color.yellow);
-    g.fillOval((int)getX(), (int)getY(), (int)width, (int)height);
-
     Graphics2D g2d = (Graphics2D) g;
+    g2d.drawImage(power, (int)getX(), (int)getY(), null);
+
+    
   }
 
   public Rectangle getBounds() {

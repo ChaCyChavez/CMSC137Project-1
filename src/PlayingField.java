@@ -10,6 +10,8 @@ import java.awt.FontFormatException;
 
 import java.io.IOException;
 import java.io.File;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -44,6 +46,10 @@ public class PlayingField extends Canvas implements Runnable {
   private float prevY = 0;
   private String time;
 
+  private BufferedImage food_big;
+  private BufferedImage bomb_big;
+  private BufferedImage power_big;
+
   public PlayingField(String playerName, String server, int portNumber) {
     this.playerName = playerName;
     this.server = server;
@@ -64,6 +70,12 @@ public class PlayingField extends Canvas implements Runnable {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+    try {
+      food_big = ImageIO.read(new File("assets/img/food-big.png"));
+      bomb_big = ImageIO.read(new File("assets/img/dynamite-big.png"));
+      power_big = ImageIO.read(new File("assets/img/power-big.png"));
+    } catch(Exception e) {}
   }
 
   private void init() {
@@ -262,12 +274,9 @@ public class PlayingField extends Canvas implements Runnable {
     g.setColor(Color.white);
     g2d.setFont(font);
     if(time != null) g2d.drawString(time, 25, 40);
-    g.setColor(Color.red);
-    g.fillOval(200, 5, 40, 40);
-    g.setColor(Color.green);
-    g.fillOval(400, 5, 40, 40);
-    g.setColor(Color.yellow);
-    g.fillOval(600, 5, 40, 40);
+    g2d.drawImage(bomb_big, 200, 5, null);
+    g2d.drawImage(food_big, 400, 5, null);
+    g2d.drawImage(power_big, 600, 5, null);
     g.setColor(Color.white);
     g2d.drawString("Bomb", 250, 40);
     g2d.drawString("Food", 450, 40);
