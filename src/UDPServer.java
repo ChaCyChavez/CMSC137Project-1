@@ -42,11 +42,11 @@ public class UDPServer implements Runnable {
         rand = new Random();
 
         for(int i = 0; i < 10; i++) {
-            int fx = Math.abs(rand.nextInt() % 860) + 80;
-            int fy = Math.abs(rand.nextInt() % 480) + 80;
+            int fx = Math.abs(rand.nextInt() % 830) + 80;
+            int fy = Math.abs(rand.nextInt() % 430) + 80;
 
-            int bx = Math.abs(rand.nextInt() % 860) + 80;
-            int by = Math.abs(rand.nextInt() % 480) + 80;
+            int bx = Math.abs(rand.nextInt() % 830) + 80;
+            int by = Math.abs(rand.nextInt() % 430) + 80;
 
             foods.add(new Food(fx, fy));
             bombs.add(new Bomb(bx, by));
@@ -83,6 +83,7 @@ public class UDPServer implements Runnable {
         double ns = 1000000000 / amountOfTicks;
         double delta = 0;
         long timer = System.currentTimeMillis();
+        long power_timer = System.currentTimeMillis();
         int updates = 0;
         int frames = 0;
 
@@ -99,6 +100,8 @@ public class UDPServer implements Runnable {
 
             playerData = new String(buffer);
             playerData = playerData.trim();
+
+
 
             switch(stage) {
                 case 3: //if waiting for players
@@ -130,8 +133,8 @@ public class UDPServer implements Runnable {
                                     bombs.get(i).getY() + " ";
                     }
 
-                    int x = Math.abs(rand.nextInt() % 850) + 80;
-                    int y = Math.abs(rand.nextInt() % 450) + 80;
+                    int x = Math.abs(rand.nextInt() % 830) + 80;
+                    int y = Math.abs(rand.nextInt() % 430) + 80;
 
                     players += "powerup:" + x + ":" + y;
 
@@ -160,14 +163,24 @@ public class UDPServer implements Runnable {
 					} else if(playerData.startsWith("FOOD")) {
                         if(System.currentTimeMillis() - timer > 1000) {
                           timer += 1000;
-                            int fx = Math.abs(rand.nextInt() % 860) + 80;
-                            int fy = Math.abs(rand.nextInt() % 450) + 80;
+                            int fx = Math.abs(rand.nextInt() % 830) + 80;
+                            int fy = Math.abs(rand.nextInt() % 430) + 80;
 
                             Food food = new Food(fx, fy);
                             broadcast("FOOD " + fx + ":" + fy);
 
                           frames = 0;
                           updates = 0;
+                          break;
+                        }
+
+                        if(System.currentTimeMillis() - power_timer > 30000) {
+                          power_timer += 30000;
+                            int px = Math.abs(rand.nextInt() % 830) + 80;
+                            int py = Math.abs(rand.nextInt() % 430) + 80;
+
+                            PowerUp food = new PowerUp(px, py);
+                            broadcast("POWERUP " + px + ":" + py);
                           break;
                         }
                     }
