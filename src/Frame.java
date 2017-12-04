@@ -18,12 +18,14 @@ public class Frame extends JFrame {
 	private static final String MENU = "MENU";
 
 	private String server;
-	private int portNumber;
+	private int tcpPortNumber;
+	private int udpPortNumber;
 
-	public Frame(String server, int portNumber) {
+	public Frame(String server, int tcpPortNumber, int udpPortNumber) {
 		super("Knock Out v.0.2");
 		this.server = server;
-		this.portNumber = portNumber;
+		this.tcpPortNumber = tcpPortNumber;
+		this.udpPortNumber = udpPortNumber;
 		this.setPreferredSize(new Dimension(1280, 720));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setContentPane(createMainPanel());
@@ -46,8 +48,8 @@ public class Frame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent ae) { 
 				if(!menuPanel.getNameField().equals("")) { //create client only if name is not empty
-					gamePanel = new GamePanel(menuPanel.getNameField(), server, portNumber);
-					Client client = new Client(menuPanel.getNameField(), server, portNumber, gamePanel); //create and start a new client
+					gamePanel = new GamePanel(menuPanel.getNameField(), server, udpPortNumber);
+					Client client = new Client(menuPanel.getNameField(), server, tcpPortNumber, gamePanel); //create and start a new client
 					mainPanel.add(gamePanel, GAME);
 					gamePanel.getBackButton().addActionListener(new ActionListener () {
 						@Override

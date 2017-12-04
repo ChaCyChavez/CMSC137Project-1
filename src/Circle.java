@@ -61,7 +61,7 @@ public class Circle extends GameObject {
     try {
       byte[] buffer = message.getBytes();
       InetAddress address = InetAddress.getByName(server);
-      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, 4444);
+      DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, getPortNumber());
       socket.send(packet);
     } catch (Exception e) {
       e.printStackTrace();

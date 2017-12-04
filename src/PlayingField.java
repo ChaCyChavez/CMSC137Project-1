@@ -126,6 +126,8 @@ public class PlayingField extends Canvas implements Runnable {
       dataFromServer = new String(buf);
       dataFromServer = dataFromServer.trim();
 
+      System.out.println(dataFromServer);
+
       if (!isConnected && dataFromServer.startsWith("CONNECTED")){
 				isConnected = true;
 				System.out.println("Connected.");
