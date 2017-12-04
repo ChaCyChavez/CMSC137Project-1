@@ -101,8 +101,6 @@ public class UDPServer implements Runnable {
             playerData = new String(buffer);
             playerData = playerData.trim();
 
-            System.out.println(playerData);
-
             switch(stage) {
                 case 3: //if waiting for players
                     if(playerData.startsWith("CONNECT")) {

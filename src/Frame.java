@@ -47,28 +47,18 @@ public class Frame extends JFrame {
 		menuPanel.getStartButton().addActionListener(new ActionListener () {
 			@Override
 			public void actionPerformed(ActionEvent ae) { 
-				if(!menuPanel.getNameField().equals("")) { //create client only if name is not empty
-					gamePanel = new GamePanel(menuPanel.getNameField(), server, udpPortNumber);
-					Client client = new Client(menuPanel.getNameField(), server, tcpPortNumber, gamePanel); //create and start a new client
-					mainPanel.add(gamePanel, GAME);
-					gamePanel.getBackButton().addActionListener(new ActionListener () {
-						@Override
-						public void actionPerformed(ActionEvent ae) {
-							cardLayout.show(mainPanel, MENU);
-						}
-					});	
-					cardLayout.show(mainPanel, GAME);
-					new Thread(new Runnable() { //run new thread so gui wont freeze
-						@Override
-						public void run() {
-							client.startClient();
-						}
-					}).start();
-				}
+				startGame();
 			}
 		});
 
-		menuPanel.getInstructionButton().addActionListener(new ActionListener () {
+		menuPanel.getField().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				startGame();
+			}
+		});
+
+		menuPanel.getInstructionButton().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				cardLayout.show(mainPanel, INSTRUCTION);
@@ -90,5 +80,26 @@ public class Frame extends JFrame {
 		});
 
 		return mainPanel;
+	}
+
+	public void startGame() {
+		if(!menuPanel.getNameField().equals("")) { //create client only if name is not empty
+			gamePanel = new GamePanel(menuPanel.getNameField(), server, udpPortNumber);
+			Client client = new Client(menuPanel.getNameField(), server, tcpPortNumber, gamePanel); //create and start a new client
+			mainPanel.add(gamePanel, GAME);
+			gamePanel.getBackButton().addActionListener(new ActionListener () {
+				@Override
+				public void actionPerformed(ActionEvent ae) {
+					cardLayout.show(mainPanel, MENU);
+				}
+			});	
+			cardLayout.show(mainPanel, GAME);
+			new Thread(new Runnable() { //run new thread so gui wont freeze
+				@Override
+				public void run() {
+					client.startClient();
+				}
+			}).start();
+		}
 	}
 }
