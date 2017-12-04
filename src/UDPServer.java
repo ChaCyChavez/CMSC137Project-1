@@ -191,15 +191,21 @@ public class UDPServer implements Runnable {
             }
 
             int remaining = 0;
+            int highScore = 0;
+            String currWinner;
             for(Iterator i = gameState.getGamePlayers().keySet().iterator(); i.hasNext();){
                 String playerName = (String) i.next();
                 GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);			
                 if(player.getType().equals("circle") && player.isAlive()) {
                     remaining += 1;
+                    if(player.getScore() > highScore) {
+                        highScore = player.getScore();
+                        currWinner = player.getName();
+                    }
                 }
             }
 
-            if((remaining == 1 && stage == 1) || !running) {
+            if(remaining == 1 && stage == 1) {
                 running = false;
                 broadcast("END");
             }
