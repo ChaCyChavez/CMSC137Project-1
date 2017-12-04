@@ -1,7 +1,27 @@
 # CMSC137Project
+KnockOut Game
 
-For server:
-java -jar Knock-Out-v.2.0.jar 0 server-name port-number number-of-clients 
+## Prerequisite(s)
+- **Java**
 
-For client
-java -jar Knock-Out-v.2.0.jar 1 server-name port-number
+## Command(s)
+
+### Set up the repository
+1. **Clone the repository**
+    ```
+	  $ git clone https://github.com/pvtan/CMSC137Project.git
+	```
+### Compile and run the application
+1. **Compile**
+    ```
+    $ makefile
+    ```
+2. **Run**
+- ***For server:***
+    ```
+	  $ java -jar Knock-Out-v.2.0.jar 0 tcp_port upd_port number_of_clients
+    ```
+- ***For client:***
+    ```
+	  $ java -jar Knock-Out-v.2.0.jar 1 server_ip_address tcp_port udp_port
+    ```
