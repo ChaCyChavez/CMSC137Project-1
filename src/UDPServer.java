@@ -190,7 +190,7 @@ public class UDPServer implements Runnable {
 
             int remaining = 0;
             int highScore = 0;
-            String currWinner;
+            String currWinner = "";
             for(Iterator i = gameState.getGamePlayers().keySet().iterator(); i.hasNext();){
                 String playerName = (String) i.next();
                 GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);			
