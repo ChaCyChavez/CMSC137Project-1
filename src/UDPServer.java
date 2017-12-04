@@ -27,7 +27,7 @@ public class UDPServer implements Runnable {
         this.playerLimit = playerLimit;
 
         try {
-            serverDatagramSocket = new DatagramSocket(4444);
+            serverDatagramSocket = new DatagramSocket(portNumber);
             serverDatagramSocket.setSoTimeout(7000);
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,8 +100,6 @@ public class UDPServer implements Runnable {
 
             playerData = new String(buffer);
             playerData = playerData.trim();
-
-
 
             switch(stage) {
                 case 3: //if waiting for players
