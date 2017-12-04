@@ -6,21 +6,24 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class UDPServer implements Runnable {
-    String playerData;
-    DatagramSocket serverDatagramSocket = null;
-    GameState gameState;
-    Thread thread = new Thread(this);
-    int connectedPlayers = 0;
-    int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
-    int playerLimit;
-    Random rand;
-    String players = "PLAYER_LIST ";
-    Boolean running = true;
+    private String playerData;
+    private DatagramSocket serverDatagramSocket = null;
+    private GameState gameState;
+    private Thread thread = new Thread(this);
+    private int connectedPlayers = 0;
+    private int stage = 3; //public final int WAITING_FOR_PLAYERS=3;
+    private int playerLimit;
+    private Random rand;
+    private String players = "PLAYER_LIST ";
+    private Boolean running = true;
+    private String server;
+    private long start;
+    private long end;
 
     ArrayList<Food> foods = new ArrayList<Food>();
     ArrayList<Bomb> bombs = new ArrayList<Bomb>();
 
-    public UDPServer (int portNumber, int playerLimit) {
+    public UDPServer (String server, int portNumber, int playerLimit) {
         this.playerLimit = playerLimit;
 
         try {
@@ -39,15 +42,17 @@ public class UDPServer implements Runnable {
         rand = new Random();
 
         for(int i = 0; i < 10; i++) {
-            int fx = Math.abs(rand.nextInt() % 875) + 65;
-            int fy = Math.abs(rand.nextInt() % 490) + 65;
+            int fx = Math.abs(rand.nextInt() % 830) + 80;
+            int fy = Math.abs(rand.nextInt() % 430) + 80;
 
-            int bx = Math.abs(rand.nextInt() % 875) + 65;
-            int by = Math.abs(rand.nextInt() % 490) + 65;
+            int bx = Math.abs(rand.nextInt() % 830) + 80;
+            int by = Math.abs(rand.nextInt() % 430) + 80;
 
             foods.add(new Food(fx, fy));
             bombs.add(new Bomb(bx, by));
         }
+
+
     }
 
     public void broadcast(String message) { //broadcast data to all players
@@ -70,7 +75,21 @@ public class UDPServer implements Runnable {
     }
 
     public void run() {
+        long start = System.currentTimeMillis();
+        long end = start + 60*1000; // 60 seconds * 1000 ms/sec
+
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        long timer = System.currentTimeMillis();
+        long power_timer = System.currentTimeMillis();
+        int updates = 0;
+        int frames = 0;
+
         while(running) {
+            frames++;
+
             byte[] buffer = new byte[2048];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length); // packet for receiving packets with lengthf buffer
             try {
@@ -81,8 +100,8 @@ public class UDPServer implements Runnable {
 
             playerData = new String(buffer);
             playerData = playerData.trim();
-            System.out.println("playerData = " + playerData);
-            System.out.println("stage = " + stage);
+
+
 
             switch(stage) {
                 case 3: //if waiting for players
@@ -90,7 +109,7 @@ public class UDPServer implements Runnable {
                         String playerDataTokens[] = playerData.split(" "); //split playerData by space
                         System.out.println("playerDataToken[1] = " + playerDataTokens[1]);                        
                         if(!players.contains(playerDataTokens[1])) {    
-                            Circle player = new Circle(100, 100, playerDataTokens[1], packet.getAddress(), packet.getPort()); //instantiate new player
+                            Circle player = new Circle(100, 100, playerDataTokens[1], packet.getAddress(), packet.getPort(), server); //instantiate new player
                             gameState.update(playerDataTokens[1].trim(), player); //add to player hashmap
                             System.out.println("Player connected: " + playerDataTokens[1]);                        
                             broadcast("CONNECTED " + playerDataTokens[1]);
@@ -114,13 +133,20 @@ public class UDPServer implements Runnable {
                                     bombs.get(i).getY() + " ";
                     }
 
-                    System.out.println(players);
+                    int x = Math.abs(rand.nextInt() % 830) + 80;
+                    int y = Math.abs(rand.nextInt() % 430) + 80;
+
+                    players += "powerup:" + x + ":" + y;
+
                     broadcast(players);
                     stage = 1; //IN_PROGRESS
+                    start = System.currentTimeMillis();
+                    end = start + 600*1000; // 60 seconds * 1000 ms/sec
                     break;
                 case 1: //IN_PROGRESS
+                    start = System.currentTimeMillis();
+                    broadcast("TIME " + Long.toString(((end-start)/1000)/60) + ":" + Long.toString(((end-start)/1000)%60));
                     if (playerData.startsWith("PLAYER")){
-                        System.out.println(playerData);
                         String[] playerPosition = playerData.split(" ");	 //Tokenize:				  
                         String playerName = playerPosition[1]; //The format: PLAYER <player name> <x> <y>
                         float xPosition = Float.parseFloat(playerPosition[2].trim());
@@ -134,7 +160,33 @@ public class UDPServer implements Runnable {
                         if(!alive) player.isDead(); 
                         gameState.update(playerName, player); //Update current player in hashmap of players
                         broadcast(gameState.gameToString()); //Send to all the updated game state
-					}
+					} else if(playerData.startsWith("FOOD")) {
+                        if(System.currentTimeMillis() - timer > 1000) {
+                          timer += 1000;
+                            int fx = Math.abs(rand.nextInt() % 830) + 80;
+                            int fy = Math.abs(rand.nextInt() % 430) + 80;
+
+                            Food food = new Food(fx, fy);
+                            broadcast("FOOD " + fx + ":" + fy);
+
+                          frames = 0;
+                          updates = 0;
+                          break;
+                        }
+
+                        if(System.currentTimeMillis() - power_timer > 30000) {
+                          power_timer += 30000;
+                            int px = Math.abs(rand.nextInt() % 830) + 80;
+                            int py = Math.abs(rand.nextInt() % 430) + 80;
+
+                            PowerUp food = new PowerUp(px, py);
+                            broadcast("POWERUP " + px + ":" + py);
+                          break;
+                        }
+                    }
+                    if(!(System.currentTimeMillis() < end)) {
+                        running = false;
+                    }
 					break;
             }
 
@@ -146,8 +198,8 @@ public class UDPServer implements Runnable {
                     remaining += 1;
                 }
             }
-            if(remaining == 1 && stage == 1) {
-                System.out.println("One player left!");
+
+            if((remaining == 1 && stage == 1) || !running) {
                 running = false;
                 broadcast("END");
             }

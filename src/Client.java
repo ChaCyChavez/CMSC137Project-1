@@ -58,7 +58,7 @@ public class Client {
                 if(sendMessage){
                     serverOutput.println(name + ": " + message); //write to output stream
                     serverOutput.flush();
-                    message = null; 
+                    message = null;
                     sendMessage = false;
                 }
             }
