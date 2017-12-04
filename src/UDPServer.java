@@ -199,7 +199,13 @@ public class UDPServer implements Runnable {
 
             if((remaining == 1 && stage == 1) || !running) {
                 running = false;
-                broadcast("END");
+                for(Iterator i = gameState.getGamePlayers().keySet().iterator(); i.hasNext();){
+                    String playerName = (String) i.next();
+                    GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);            
+                    if(player.getType().equals("circle") && player.isAlive()) {
+                        broadcast("END " + playerName);
+                    }
+                }
             }
         }
     }
