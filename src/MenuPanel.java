@@ -149,6 +149,10 @@ public class MenuPanel extends JPanel {
 		return this.nameField.getText();
 	}
 
+	public JTextField getField() {
+		return this.nameField;
+	}
+
 	private void setMenuButtonFont(JButton button)  {
 		font = font.deriveFont(Font.PLAIN, 40);
 		button.setFont(font);

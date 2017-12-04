@@ -101,8 +101,6 @@ public class UDPServer implements Runnable {
             playerData = new String(buffer);
             playerData = playerData.trim();
 
-            System.out.println(playerData);
-
             switch(stage) {
                 case 3: //if waiting for players
                     if(playerData.startsWith("CONNECT")) {
@@ -207,7 +205,13 @@ public class UDPServer implements Runnable {
 
             if(remaining == 1 && stage == 1) {
                 running = false;
-                broadcast("END");
+                for(Iterator i = gameState.getGamePlayers().keySet().iterator(); i.hasNext();){
+                    String playerName = (String) i.next();
+                    GameObject player = (GameObject) gameState.getGamePlayers().get(playerName);            
+                    if(player.getType().equals("circle") && player.isAlive()) {
+                        broadcast("END " + playerName);
+                    }
+                }
             }
         }
     }

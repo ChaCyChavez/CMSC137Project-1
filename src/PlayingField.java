@@ -126,8 +126,6 @@ public class PlayingField extends Canvas implements Runnable {
       dataFromServer = new String(buf);
       dataFromServer = dataFromServer.trim();
 
-      System.out.println(dataFromServer);
-
       if (!isConnected && dataFromServer.startsWith("CONNECTED")){
 				isConnected = true;
 				System.out.println("Connected.");
@@ -135,10 +133,11 @@ public class PlayingField extends Canvas implements Runnable {
 				System.out.println("Connecting..");		
         printWaiting();		
 				sendMessage("CONNECT " + playerName);
-			} else if(isConnected && dataFromServer.equals("END")) {
+			} else if(isConnected && dataFromServer.startsWith("END")) {
         running = false;
+        String name = dataFromServer.split(" ")[1];
         System.out.println("GAME OVER");
-        printGameOver();
+        printGameOver(name);
       } else if (isConnected && completedPlayers){      
         long now = System.nanoTime();
         delta += (now - lastTime) / ns;
@@ -298,7 +297,7 @@ public class PlayingField extends Canvas implements Runnable {
     Toolkit.getDefaultToolkit().sync();
   }
 
-  private void printGameOver() {
+  private void printGameOver(String winner) {
     //print game over screen
     BufferStrategy bs = this.getBufferStrategy();
     if(bs == null) {
@@ -316,6 +315,9 @@ public class PlayingField extends Canvas implements Runnable {
     g.setColor(Color.white);
     g2d.setFont(font);
     g2d.drawString("GAME OVER", 300, 240);
+    font = font.deriveFont(Font.PLAIN, 50);
+    g2d.setFont(font);
+    g2d.drawString("WINNER: " + winner, 350, 300);
   }
 
   private void printWaiting() {
