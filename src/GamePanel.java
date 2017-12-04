@@ -40,7 +40,6 @@ public class GamePanel extends JPanel {
 
 	private JPanel topPanel;
 	private JLabel header;
-	private JButton backButton;
 
 	private PlayingField playingField;
 
@@ -98,14 +97,6 @@ public class GamePanel extends JPanel {
 		header = new JLabel("Knock Out");
 		header.setFont(font);
 		header.setForeground(Color.WHITE);
-
-		backButton = new JButton(" < ");
-		backButton.setFont(font);
-		backButton.setBorder(null);
-		backButton.setBackground(Color.BLACK);
-		backButton.setForeground(Color.WHITE);
-
-		topPanel.add(backButton);
 		topPanel.add(header);
 
 		return topPanel;
@@ -190,11 +181,6 @@ public class GamePanel extends JPanel {
 	public void appendConversationPane (String message) {
 		String curr = conversation.getText();
 		conversation.setText(curr + message);
-	}
-
-
-	public JButton getBackButton() {
-		return this.backButton;
 	}
 
 	private void addHoverEffect(JButton button) {
